@@ -1,25 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
-import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'dart:async';
 
 // void main() => runApp(MyApp());
 class running extends StatelessWidget {
+  const running({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
   // @override
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Image.asset("images/logo.jpg",
                   width: 30, height: 30, fit: BoxFit.fill),
-              Text(
+              const Text(
                 "Plama detection",
                 style: TextStyle(
                     color: Color.fromARGB(255, 151, 88, 253),
@@ -75,16 +75,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: <Widget>[
             SideMenu(
-              backgroundColor: Color.fromARGB(255, 231, 231, 231),
+              backgroundColor: const Color.fromARGB(255, 231, 231, 231),
               builder: (data) => SideMenuData(
-                header: Column(
+                header: const Column(
                   children: [
                     SizedBox(
                       height: (30),
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
+                      child: SizedBox(
                         // color: Color.fromARGB(255, 255, 37, 37),
                         // width: 100,
                         height: 30,
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 items: [
                   SideMenuItemDataTile(
-                    highlightSelectedColor: Color.fromARGB(255, 255, 255, 255),
+                    highlightSelectedColor: const Color.fromARGB(255, 255, 255, 255),
                     hoverColor: const Color.fromARGB(255, 156, 156, 156),
                     isSelected: false,
                     onTap: () {
@@ -160,13 +160,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     children: [
                       if (_selectedOption == Options.option1)
-                        Running_Widget()
+                        const Running_Widget()
                       else if (_selectedOption == Options.option2)
                         Dashboard_Widget()
                       else if (_selectedOption == Options.option3)
-                        Train_Widget()
+                        const Train_Widget()
                       else
-                        DataCenter_Widget(), // Add a default case to handle other options
+                        const DataCenter_Widget(), // Add a default case to handle other options
                     ],
                   ),
                 ),
@@ -180,6 +180,8 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Running_Widget extends StatefulWidget {
+  const Running_Widget({super.key});
+
 
   // bool initialBoolean;
   // Running_Widget({required this.initialBoolean});
@@ -197,7 +199,7 @@ class _Running_WidgetState extends State<Running_Widget> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(milliseconds: 50), (Timer timer) {
+    Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
       if (!_updating) {
         _updateImage();
       }
@@ -213,8 +215,8 @@ class _Running_WidgetState extends State<Running_Widget> {
     String newImageUrl = "http://127.0.0.1:5000/image?t=${DateTime.now().millisecondsSinceEpoch}";
     await precacheImage(NetworkImage(newImageUrl), context);
 
-    String newImageUrl_qr = "http://127.0.0.1:5000/image_qr?t=${DateTime.now().millisecondsSinceEpoch}";
-    await precacheImage(NetworkImage(newImageUrl_qr), context);
+    String newimageurlQr = "http://127.0.0.1:5000/image_qr?t=${DateTime.now().millisecondsSinceEpoch}";
+    await precacheImage(NetworkImage(newimageurlQr), context);
     // String newImageUrl = "http://127.0.0.1:5000/image";
     // await precacheImage(NetworkImage(newImageUrl), context);
     // String newImageUrl_qr = "http://127.0.0.1:5000/image_qr";
@@ -225,7 +227,7 @@ class _Running_WidgetState extends State<Running_Widget> {
     setState(() {
       imageUrl = newImageUrl;
       // print(imageUrl);
-      imageUrl_qr = newImageUrl_qr;
+      imageUrl_qr = newimageurlQr;
       // print(imageUrl_qr);
       _updating = false;
     });
@@ -267,12 +269,12 @@ class _Running_WidgetState extends State<Running_Widget> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Model version $version"),
-            content: Container(
+            content: SizedBox(
               height: 300,
               width: 300,
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("Model in computer"),
@@ -283,14 +285,14 @@ class _Running_WidgetState extends State<Running_Widget> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: () {}, child: Text("Download")),
-                      ElevatedButton(onPressed: () {}, child: Text("Use model"))
+                      ElevatedButton(onPressed: () {}, child: const Text("Download")),
+                      ElevatedButton(onPressed: () {}, child: const Text("Use model"))
                     ],
                   )
                 ],
@@ -298,7 +300,7 @@ class _Running_WidgetState extends State<Running_Widget> {
             ),
             actions: [
               TextButton(
-                child: Text("OK"),
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -314,8 +316,8 @@ class _Running_WidgetState extends State<Running_Widget> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Load History"),
-            content: Container(
+            title: const Text("Load History"),
+            content: SizedBox(
               height: 300,
               width: 800,
               child: Column(
@@ -331,34 +333,34 @@ class _Running_WidgetState extends State<Running_Widget> {
                               title: Row(
                                 children: [
                                   Text(Historylist[index].name),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Text(
                                       "Height ${Historylist[index].set_hight}"),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Text(
                                       "Diameter ${Historylist[index].set_Diameter}"),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Text("px/mm ${Historylist[index].set_px_mm}"),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   ElevatedButton(
-                                      onPressed: () {}, child: Text('Use')),
-                                  SizedBox(
+                                      onPressed: () {}, child: const Text('Use')),
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   ElevatedButton(
-                                      onPressed: () {}, child: Text('Delete')),
+                                      onPressed: () {}, child: const Text('Delete')),
                                 ],
                               ),
                             ),
-                            Divider(color: Colors.black),
+                            const Divider(color: Colors.black),
                           ],
                         );
                       },
@@ -369,7 +371,7 @@ class _Running_WidgetState extends State<Running_Widget> {
             ),
             actions: [
               TextButton(
-                child: Text("OK"),
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -399,18 +401,18 @@ class _Running_WidgetState extends State<Running_Widget> {
             Container(
               width: 400,
               height: 450,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
+                  const Text(
                     "Running",
                     style: TextStyle(fontSize: 20),
                   ),
                   Container(
                     width: 400,
                     height: 400,
-                    color: Color.fromARGB(255, 211, 211, 211),
+                    color: const Color.fromARGB(255, 211, 211, 211),
                     child: Column(
                       children: [
                         Image.network(imageUrl,
@@ -426,18 +428,18 @@ class _Running_WidgetState extends State<Running_Widget> {
             Container(
               width: 400,
               height: 450,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
+                  const Text(
                     "Running",
                     style: TextStyle(fontSize: 20),
                   ),
                   Container(
                     width: 400,
                     height: 400,
-                    color: Color.fromARGB(255, 211, 211, 211),
+                    color: const Color.fromARGB(255, 211, 211, 211),
                     child: Column(
                       children: [
                         Image.network(imageUrl_qr,
@@ -454,11 +456,11 @@ class _Running_WidgetState extends State<Running_Widget> {
             Container(
               width: 400,
               height: 450,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
+                  const Text(
                     "Command",
                     style: TextStyle(fontSize: 20),
                   ),
@@ -466,11 +468,11 @@ class _Running_WidgetState extends State<Running_Widget> {
                     width: 400,
                     height: 400,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 211, 211, 211),
+                      color: const Color.fromARGB(255, 211, 211, 211),
                       borderRadius: BorderRadius.circular(
                           15), // Half the width/height to make it circular
                     ),
-                    child: Column(
+                    child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("50.rotate +1 | finish"),
@@ -486,7 +488,7 @@ class _Running_WidgetState extends State<Running_Widget> {
             )
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 50,
         ),
         Row(
@@ -495,11 +497,11 @@ class _Running_WidgetState extends State<Running_Widget> {
             Container(
               width: 400,
               height: 450,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
+                  const Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -514,13 +516,13 @@ class _Running_WidgetState extends State<Running_Widget> {
                         Container(
                           width: 350,
                           height: 350,
-                          color: Color.fromARGB(255, 255, 255, 255),
+                          color: const Color.fromARGB(255, 255, 255, 255),
                           child: Stack(
                             children: [
                               Container(
                                 width: 350,
                                 height: 350,
-                                color: Color.fromARGB(255, 255, 255, 255),
+                                color: const Color.fromARGB(255, 255, 255, 255),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -529,7 +531,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                                   ],
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 100, // ระบุค่าพิกัด x
                                 top: 100, // ระบุค่าพิกัด y
                                 child: Text(
@@ -540,7 +542,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                                       fontFamily: 'Poppins'),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 70, // ระบุค่าพิกัด x
                                 top: 140, // ระบุค่าพิกัด y
                                 child: Text(
@@ -551,7 +553,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                                       fontFamily: 'Poppins'),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 200, // ระบุค่าพิกัด x
                                 top: 150, // ระบุค่าพิกัด y
                                 child: Text(
@@ -562,7 +564,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                                       fontFamily: 'Poppins'),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 230, // ระบุค่าพิกัด x
                                 top: 200, // ระบุค่าพิกัด y
                                 child: Text(
@@ -573,7 +575,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                                       fontFamily: 'Poppins'),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 55, // ระบุค่าพิกัด x
                                 top: 240, // ระบุค่าพิกัด y
                                 child: Text(
@@ -584,7 +586,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                                       fontFamily: 'Poppins'),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 30, // ระบุค่าพิกัด x
                                 top: 280, // ระบุค่าพิกัด y
                                 child: Text(
@@ -607,28 +609,28 @@ class _Running_WidgetState extends State<Running_Widget> {
             Container(
               width: 400,
               height: 450,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Model version",
                     style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                   ),
-                  Text(
+                  const Text(
                     "List all model in record",
                     style: TextStyle(
                         fontSize: 15,
                         fontFamily: 'Poppins',
                         color: Color.fromARGB(255, 56, 56, 56)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
                     width: 400,
                     height: 350,
-                    color: Color.fromARGB(255, 255, 255, 255),
+                    color: const Color.fromARGB(255, 255, 255, 255),
                     child: ListView.builder(
                       itemCount: models
                           .length, // replace `models` with your data source
@@ -636,33 +638,33 @@ class _Running_WidgetState extends State<Running_Widget> {
                         return ListTile(
                             title: Row(
                               children: [
-                                new Container(
+                                Container(
                                     width: 40,
                                     height: 40,
-                                    decoration: new BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
-                                        image: new DecorationImage(
+                                        image: DecorationImage(
                                             fit: BoxFit.fill,
-                                            image: new AssetImage(
+                                            image: AssetImage(
                                                 "images/ai.png")))),
-                                SizedBox(
+                                const SizedBox(
                                   width: 30,
                                 ),
                                 Text(models[index].version),
-                                SizedBox(
+                                const SizedBox(
                                   width: 100,
                                 ),
                                 Text("Rate ${models[index].rate}"),
-                                SizedBox(
+                                const SizedBox(
                                   width: 30,
                                 ),
                                 IconButton(
                                     onPressed: () => changeStateModelversion(
                                         models[index].version),
-                                    icon: Icon(Icons.arrow_forward_ios))
+                                    icon: const Icon(Icons.arrow_forward_ios))
                               ],
                             ),
-                            subtitle: Divider(color: Colors.black));
+                            subtitle: const Divider(color: Colors.black));
                       },
                     ),
                   ),
@@ -672,11 +674,11 @@ class _Running_WidgetState extends State<Running_Widget> {
             Container(
               width: 400,
               height: 450,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Setting",
                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                     ),
@@ -684,21 +686,21 @@ class _Running_WidgetState extends State<Running_Widget> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Setting Name : kuytest"),
-                          SizedBox(
+                          const Text("Setting Name : kuytest"),
+                          const SizedBox(
                             width: 50,
                           ),
                           ElevatedButton(
                               onPressed: changeStateSetting,
-                              child: Row(
+                              child: const Row(
                                 children: [Text("Load History")],
                               ))
                         ],
                       ),
                     ),
-                    Divider(color: Colors.black),
+                    const Divider(color: Colors.black),
                     Container(
-                      child: Row(
+                      child: const Row(
                         children: [
                           Text("Tube Hight"),
                         ],
@@ -707,16 +709,16 @@ class _Running_WidgetState extends State<Running_Widget> {
                     Container(
                       child: Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 300,
                             child: TextField(),
                           ),
-                          ElevatedButton(onPressed: () {}, child: Text("Save"))
+                          ElevatedButton(onPressed: () {}, child: const Text("Save"))
                         ],
                       ),
                     ),
                     Container(
-                      child: Row(
+                      child: const Row(
                         children: [
                           Text("Tube Diameter"),
                         ],
@@ -725,16 +727,16 @@ class _Running_WidgetState extends State<Running_Widget> {
                     Container(
                       child: Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 300,
                             child: TextField(),
                           ),
-                          ElevatedButton(onPressed: () {}, child: Text("Save"))
+                          ElevatedButton(onPressed: () {}, child: const Text("Save"))
                         ],
                       ),
                     ),
                     Container(
-                      child: Row(
+                      child: const Row(
                         children: [
                           Text("px : mm"),
                         ],
@@ -743,18 +745,18 @@ class _Running_WidgetState extends State<Running_Widget> {
                     Container(
                       child: Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 140,
                             child: TextField(),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 140,
                             child: TextField(),
                           ),
-                          ElevatedButton(onPressed: () {}, child: Text("Save"))
+                          ElevatedButton(onPressed: () {}, child: const Text("Save"))
                         ],
                       ),
                     ),
@@ -777,6 +779,9 @@ class Dashboard_Widget extends StatelessWidget {
         rate: '${index + 80}%'),
   );
 
+  Dashboard_Widget({super.key});
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -784,40 +789,40 @@ class Dashboard_Widget extends StatelessWidget {
         Container(
           width: 920,
           height: 900,
-          color: Color.fromARGB(255, 222, 240, 121),
+          color: const Color.fromARGB(255, 222, 240, 121),
           child: Column(
             children: [
               Container(
                 height: 450,
                 width: 920,
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Dashboard",
                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Detecttion lost",
+                          const Text("Detecttion lost",
                               style: TextStyle(
                                   fontSize: 15, fontFamily: 'Poppins')),
                           ElevatedButton(
                               onPressed: () {},
-                              child: Text(
+                              child: const Text(
                                 "View report",
                                 style: TextStyle(color: Color(0xFF5A6ACF)),
                               )),
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       "3 / 15",
                       style: TextStyle(
                           fontSize: 20,
@@ -825,7 +830,7 @@ class Dashboard_Widget extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                     Container(
-                      child: Row(
+                      child: const Row(
                         children: [
                           Icon(
                             Icons.arrow_upward,
@@ -847,11 +852,11 @@ class Dashboard_Widget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 250, // cari++++++++
                       child: SfCartesianChart(
-                          primaryXAxis: CategoryAxis(),
-                          primaryYAxis: NumericAxis(
+                          primaryXAxis: const CategoryAxis(),
+                          primaryYAxis: const NumericAxis(
                               minimum: 0, maximum: 100, interval: 25),
                           series: <CartesianSeries<ChartData, String>>[
                             ColumnSeries<ChartData, String>(
@@ -873,7 +878,7 @@ class Dashboard_Widget extends StatelessWidget {
                               xValueMapper: (ChartData data, _) => data.x,
                               yValueMapper: (ChartData data, _) => data.y,
                               name: 'Series 1',
-                              color: Color(0xFF5A6ACF),
+                              color: const Color(0xFF5A6ACF),
                             ),
                             ColumnSeries<ChartData, String>(
                               dataSource: [
@@ -894,7 +899,7 @@ class Dashboard_Widget extends StatelessWidget {
                               xValueMapper: (ChartData data, _) => data.x,
                               yValueMapper: (ChartData data, _) => data.y,
                               name: 'Series 2',
-                              color: Color.fromARGB(0, 22, 243, 29),
+                              color: const Color.fromARGB(0, 22, 243, 29),
                             ),
                             ColumnSeries<ChartData, String>(
                               dataSource: [
@@ -915,12 +920,12 @@ class Dashboard_Widget extends StatelessWidget {
                               xValueMapper: (ChartData data, _) => data.x,
                               yValueMapper: (ChartData data, _) => data.y,
                               name: 'Series 1',
-                              color: Color(0xFFF2383A),
+                              color: const Color(0xFFF2383A),
                             ),
                           ]),
                     ),
                     Container(
-                      child: Row(
+                      child: const Row(
                         children: [
                           Icon(
                             Icons.circle,
@@ -946,23 +951,23 @@ class Dashboard_Widget extends StatelessWidget {
               Container(
                 height: 450,
                 width: 920,
-                color: Color.fromARGB(255, 200, 202, 201),
+                color: const Color.fromARGB(255, 200, 202, 201),
                 child: Row(
                   children: [
                     Container(
                       height: 450,
                       width: 460,
-                      color: Color.fromARGB(255, 255, 255, 255),
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       child: Column(
                         children: [
                           Container(
                             width: 400,
                             height: 450,
-                            color: Color.fromARGB(255, 255, 255, 255),
+                            color: const Color.fromARGB(255, 255, 255, 255),
                             child: Column(
                               // mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Row(
+                                const Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
@@ -979,13 +984,13 @@ class Dashboard_Widget extends StatelessWidget {
                                         width: 350,
                                         height: 350,
                                         color:
-                                            Color.fromARGB(255, 255, 255, 255),
+                                            const Color.fromARGB(255, 255, 255, 255),
                                         child: Stack(
                                           children: [
                                             Container(
                                               width: 350,
                                               height: 350,
-                                              color: Color.fromARGB(
+                                              color: const Color.fromARGB(
                                                   255, 255, 255, 255),
                                               child: Column(
                                                 mainAxisAlignment:
@@ -997,7 +1002,7 @@ class Dashboard_Widget extends StatelessWidget {
                                                 ],
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 100, // ระบุค่าพิกัด x
                                               top: 100, // ระบุค่าพิกัด y
                                               child: Text(
@@ -1009,7 +1014,7 @@ class Dashboard_Widget extends StatelessWidget {
                                                     fontFamily: 'Poppins'),
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 70, // ระบุค่าพิกัด x
                                               top: 140, // ระบุค่าพิกัด y
                                               child: Text(
@@ -1021,7 +1026,7 @@ class Dashboard_Widget extends StatelessWidget {
                                                     fontFamily: 'Poppins'),
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 200, // ระบุค่าพิกัด x
                                               top: 150, // ระบุค่าพิกัด y
                                               child: Text(
@@ -1033,7 +1038,7 @@ class Dashboard_Widget extends StatelessWidget {
                                                     fontFamily: 'Poppins'),
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 230, // ระบุค่าพิกัด x
                                               top: 200, // ระบุค่าพิกัด y
                                               child: Text(
@@ -1045,7 +1050,7 @@ class Dashboard_Widget extends StatelessWidget {
                                                     fontFamily: 'Poppins'),
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 55, // ระบุค่าพิกัด x
                                               top: 240, // ระบุค่าพิกัด y
                                               child: Text(
@@ -1057,7 +1062,7 @@ class Dashboard_Widget extends StatelessWidget {
                                                     fontFamily: 'Poppins'),
                                               ),
                                             ),
-                                            Positioned(
+                                            const Positioned(
                                               left: 30, // ระบุค่าพิกัด x
                                               top: 280, // ระบุค่าพิกัด y
                                               child: Text(
@@ -1084,29 +1089,29 @@ class Dashboard_Widget extends StatelessWidget {
                     Container(
                       height: 450,
                       width: 460,
-                      color: Color.fromARGB(255, 255, 255, 255),
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Model version",
                             style:
                                 TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                           ),
-                          Text(
+                          const Text(
                             "List all model in record",
                             style: TextStyle(
                                 fontSize: 15,
                                 fontFamily: 'Poppins',
                                 color: Color.fromARGB(255, 56, 56, 56)),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
                             width: 400,
                             height: 350,
-                            color: Color.fromARGB(255, 255, 255, 255),
+                            color: const Color.fromARGB(255, 255, 255, 255),
                             child: ListView.builder(
                               itemCount: modelsV2
                                   .length, // replace `models` with your data source
@@ -1114,32 +1119,32 @@ class Dashboard_Widget extends StatelessWidget {
                                 return ListTile(
                                     title: Row(
                                       children: [
-                                        new Container(
+                                        Container(
                                             width: 40,
                                             height: 40,
-                                            decoration: new BoxDecoration(
+                                            decoration: const BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                image: new DecorationImage(
+                                                image: DecorationImage(
                                                     fit: BoxFit.fill,
-                                                    image: new AssetImage(
+                                                    image: AssetImage(
                                                         "images/ai.png")))),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 30,
                                         ),
                                         Text(modelsV2[index].version),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 100,
                                         ),
                                         Text("Rate ${modelsV2[index].rate}"),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 30,
                                         ),
                                         IconButton(
                                             onPressed: () {},
-                                            icon: Icon(Icons.arrow_forward_ios))
+                                            icon: const Icon(Icons.arrow_forward_ios))
                                       ],
                                     ),
-                                    subtitle: Divider(color: Colors.black));
+                                    subtitle: const Divider(color: Colors.black));
                               },
                             ),
                           ),
@@ -1152,7 +1157,7 @@ class Dashboard_Widget extends StatelessWidget {
             ],
           ),
         ),
-        Container(
+        SizedBox(
           width: 400,
           height: 900,
           // color: Color.fromARGB(255, 214, 252, 1),
@@ -1161,11 +1166,11 @@ class Dashboard_Widget extends StatelessWidget {
               Container(
                 width: 400,
                 height: 450,
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Setting",
                         style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                       ),
@@ -1173,21 +1178,21 @@ class Dashboard_Widget extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Setting Name : kuytest"),
-                            SizedBox(
+                            const Text("Setting Name : kuytest"),
+                            const SizedBox(
                               width: 50,
                             ),
                             ElevatedButton(
                                 onPressed: () {},
-                                child: Row(
+                                child: const Row(
                                   children: [Text("Load History")],
                                 ))
                           ],
                         ),
                       ),
-                      Divider(color: Colors.black),
+                      const Divider(color: Colors.black),
                       Container(
-                        child: Row(
+                        child: const Row(
                           children: [
                             Text("Tube Hight"),
                           ],
@@ -1196,17 +1201,17 @@ class Dashboard_Widget extends StatelessWidget {
                       Container(
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 300,
                               child: TextField(),
                             ),
                             ElevatedButton(
-                                onPressed: () {}, child: Text("Save"))
+                                onPressed: () {}, child: const Text("Save"))
                           ],
                         ),
                       ),
                       Container(
-                        child: Row(
+                        child: const Row(
                           children: [
                             Text("Tube Diameter"),
                           ],
@@ -1215,17 +1220,17 @@ class Dashboard_Widget extends StatelessWidget {
                       Container(
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 300,
                               child: TextField(),
                             ),
                             ElevatedButton(
-                                onPressed: () {}, child: Text("Save"))
+                                onPressed: () {}, child: const Text("Save"))
                           ],
                         ),
                       ),
                       Container(
-                        child: Row(
+                        child: const Row(
                           children: [
                             Text("px : mm"),
                           ],
@@ -1234,19 +1239,19 @@ class Dashboard_Widget extends StatelessWidget {
                       Container(
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 140,
                               child: TextField(),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 140,
                               child: TextField(),
                             ),
                             ElevatedButton(
-                                onPressed: () {}, child: Text("Save"))
+                                onPressed: () {}, child: const Text("Save"))
                           ],
                         ),
                       ),
@@ -1255,15 +1260,15 @@ class Dashboard_Widget extends StatelessWidget {
               Container(
                 width: 400,
                 height: 450,
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Notification",
                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                     ),
-                    Text(
+                    const Text(
                       "3",
                       style: TextStyle(fontSize: 15, fontFamily: 'Poppins'),
                     ),
@@ -1271,7 +1276,7 @@ class Dashboard_Widget extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
+                          const Row(
                             children: [
                               Icon(
                                 Icons.arrow_downward,
@@ -1291,30 +1296,30 @@ class Dashboard_Widget extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 15,
                                     fontFamily: 'Poppins',
-                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    color: Color.fromARGB(255, 0, 0, 0),
                                     fontWeight: FontWeight.w100),
                               ),
                             ],
                           ),
                           ElevatedButton(
-                              onPressed: () {}, child: Text("View Report")),
+                              onPressed: () {}, child: const Text("View Report")),
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Detect from 1-6 Jan, 2024",
                       style: TextStyle(
                           fontSize: 15,
                           fontFamily: 'Poppins',
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                          color: Color.fromARGB(255, 0, 0, 0),
                           fontWeight: FontWeight.w100),
                     ),
                     // grap--------------
-                    Container(
+                    SizedBox(
                       height: 250, // cari++++++++
                       child: SfCartesianChart(
-                          primaryXAxis: CategoryAxis(),
-                          primaryYAxis: NumericAxis(
+                          primaryXAxis: const CategoryAxis(),
+                          primaryYAxis: const NumericAxis(
                               minimum: 0, maximum: 100, interval: 25),
                           series: <CartesianSeries<ChartData, String>>[
                             LineSeries<ChartData, String>(
@@ -1336,7 +1341,7 @@ class Dashboard_Widget extends StatelessWidget {
                               xValueMapper: (ChartData data, _) => data.x,
                               yValueMapper: (ChartData data, _) => data.y,
                               name: 'Series 1',
-                              color: Color(0xFF5A6ACF),
+                              color: const Color(0xFF5A6ACF),
                             ),
                             LineSeries<ChartData, String>(
                               dataSource: [
@@ -1357,12 +1362,12 @@ class Dashboard_Widget extends StatelessWidget {
                               xValueMapper: (ChartData data, _) => data.x,
                               yValueMapper: (ChartData data, _) => data.y,
                               name: 'Series 1',
-                              color: Color(0xFFF2383A),
+                              color: const Color(0xFFF2383A),
                             ),
                           ]),
                     ),
                     Container(
-                      child: Row(
+                      child: const Row(
                         children: [
                           Icon(
                             Icons.circle,
@@ -1394,9 +1399,11 @@ class Dashboard_Widget extends StatelessWidget {
 }
 
 class Train_Widget extends StatelessWidget {
+  const Train_Widget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Icon(Icons.r_mobiledata),
         Text('Second Widget'),
@@ -1406,9 +1413,11 @@ class Train_Widget extends StatelessWidget {
 }
 
 class DataCenter_Widget extends StatelessWidget {
+  const DataCenter_Widget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Icon(Icons.r_mobiledata),
         Text('Second Widget'),

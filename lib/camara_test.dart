@@ -18,6 +18,8 @@ import 'dart:async';
 // }
 
 class LiveImageWidget extends StatefulWidget {
+  const LiveImageWidget({super.key});
+
   @override
   _LiveImageWidgetState createState() => _LiveImageWidgetState();
 }
@@ -29,7 +31,7 @@ class _LiveImageWidgetState extends State<LiveImageWidget> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(milliseconds: 50), (Timer timer) {
+    Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
       if (!_updating) {
         _updateImage();
       }
