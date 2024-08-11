@@ -2460,7 +2460,9 @@ class DataCenter_Widget extends StatefulWidget {
 class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   // final List<String> entries = <String>['A', 'B', 'C'];
   // final List<int> colorCodes = <int>[600, 500, 100];
-  final List<bool> list_bool_del = <bool>[false, false, false, false, false, false];
+  List<bool> list_bool_del = <bool>[];
+  List<bool> list_bool_move_to_bad = <bool>[];
+  List<String> list_image_good_pool = <String>[];
 
   // bool _isChecked = false;
   void _toggleCheckbox(bool? value, int index_list) {
@@ -2470,28 +2472,42 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     });
   }
 
-
-  Map<String, dynamic> list_file_name = jsonDecode("");
-  void run_getlist_from_good_pool() async{
-    final response = await http.get(
-          Uri.parse(
-              'http://210.246.215.145:1234/get_name_data_set_in_good_pool'), // Replace with your backend URL
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          // body: jsonEncode(<String, String>{
-          //   'start': startDateStamp.toString(),
-          //   'end': endDateStamp.toString()
-          // }),
-        );
-        if (response.statusCode == 200) {
-          list_file_name = jsonDecode(response.body);
-          // final Map<String, dynamic> responseData = jsonDecode(response.body);
-          print(list_file_name);
-        }
+  void _toggleCheckbox_move_to_bad(bool? value, int index_list) {
+    setState(() {
+      // _isChecked = value ?? false;
+      list_bool_move_to_bad[index_list] = value ?? false;
+    });
   }
+
+
+  late List GoodPool_list;
+  List<dynamic> list_model_in_com = [];
+    void runGetListFromGoodPool() async {
+      final response = await http.get(
+        Uri.parse(
+            'http://210.246.215.145:1234/get_name_data_set_in_good_pool'), // Replace with your backend URL
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        GoodPool_list = responseData['files'];
+
+        list_bool_del = [];
+        list_image_good_pool = [];
+        list_bool_move_to_bad = [];
+
+        for(var i in GoodPool_list){
+          list_bool_del.add(false);
+          list_bool_move_to_bad.add(false);
+          list_image_good_pool.add(i);
+        }
+        print(responseData['files']);
+      }
+    }
+  
   Widget Goodrender_image(){
-    run_getlist_from_good_pool();
+    print("workkkkk");
+    runGetListFromGoodPool();
+    // print(fetchPhotos(http.Client()));
     return SizedBox(
           height: 800,
           width: 1600,
@@ -2508,22 +2524,20 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                 itemCount: list_bool_del.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    color: Colors.blue,
+                    // color: Colors.blue,
                     child: Column(
                       children: [
-                        Image.network("https://www.usatoday.com/gcdn/presto/2023/07/10/USAT/aee85bb0-b58f-4d28-bc08-f0e68d79a230-cat_years.png?crop=2949,1922,x432,y212",
-                        height: 100,
-                        ),
                         Row(children: [
+                          SizedBox(width: 25,),
                           Checkbox(
-                            value: list_bool_del[index],
+                            value: list_bool_move_to_bad[index],
                             onChanged: (bool? value) {
-                              _toggleCheckbox(value, index);
+                              _toggleCheckbox_move_to_bad(value, index);
                             },
                           ),
                           Text("move to bad"),
-                        ],),
-                        Row(children: [
+
+                          SizedBox(width: 50,),
                           Checkbox(
                             value: list_bool_del[index],
                             onChanged: (bool? value) {
@@ -2532,7 +2546,9 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                           ),
                           Text("delet"),
                         ],),
-
+                        Image.network("http://210.246.215.145:1234/show/good/${list_image_good_pool[index]}",
+                        height: 250,
+                        ),
                       ],
                     ),
                   );
@@ -2563,7 +2579,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                     color: Colors.blue,
                     child: Column(
                       children: [
-                        Image.network("https://cdn.pixabay.com/photo/2022/02/17/04/54/animal-7017939_1280.jpg",height: 100,),
+                        // Image.network("https://cdn.pixabay.com/photo/2022/02/17/04/54/animal-7017939_1280.jpg",height: 100,),
                         Row(children: [
                           Checkbox(
                             value: list_bool_del[index],
