@@ -32,24 +32,9 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
-  // @override
-  // _ImageFetcherState createState() => _ImageFetcherState();
 }
 
-enum Options { option1, option2, option3, option4, option5 }
-
-// class listModels {
-//   List<Model> setListmodel() {
-//     final List<Model> models = List.generate(
-//       10,
-//       (index) => Model(
-//           name: 'Model $index',
-//           version: '${index + 1.0}.0',
-//           rate: '${index + 80}%'),
-//     );
-//     return models;
-//   }
-// }
+enum Options { option1, option2, option3, option4, option5, option6}
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _showFirstWidget = true;
@@ -167,6 +152,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       setState(() {
                         _selectedOption = Options.option5;
+                      });
+                    },
+                    title: '   Data Center for train',
+                    icon: const Icon(Icons.dataset),
+                  ),
+                  SideMenuItemDataTile(
+                    highlightSelectedColor: Colors.white,
+                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                    isSelected: false,
+                    onTap: () {
+                      setState(() {
+                        _selectedOption = Options.option6;
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const Login()));
                       });
@@ -190,10 +187,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         Dashboard_Widget()
                       else if (_selectedOption == Options.option3)
                         const Train_Widget()
-                      // else if (_selectedOption == Options.option5)
-
-                      else
-                        DataCenter_Widget(), // Add a default case to handle other options
+                      else if (_selectedOption == Options.option4)
+                        DataCenter_Widget()
+                      else if (_selectedOption == Options.option5)
+                        DataCenter_for_train(), // Add a default case to handle other options
                     ],
                   ),
                 ),
@@ -2433,15 +2430,25 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
   }
 }
 
-class Train_Widget extends StatelessWidget {
+class Train_Widget extends StatefulWidget {
   const Train_Widget({super.key});
 
+  @override
+  State<Train_Widget> createState() => _Train_WidgetState();
+}
+
+class _Train_WidgetState extends State<Train_Widget> {
+  @override
+  void initState() {
+    super.initState();
+    _launchURL();
+  }
   @override
   Widget build(BuildContext context) {
     return const Column(
       children: [
         Icon(Icons.r_mobiledata),
-        Text('Second Widget'),
+        Text('open colab for train model'),
       ],
     );
   }
@@ -2665,10 +2672,19 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
         "folder_name": "bad"
       }),
     );
-    setState(() {
-      
-    });
+    setState(() {});
+  }
 
+  Future<void> move_all_to_train() async{
+    final response5 = await http.post(
+      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset_pool_to_train'),
+      headers: {
+        'Content-Type': 'application/json',  // Set content type to JSON
+      },
+      body: jsonEncode({
+        "mode":"pool_to_train",
+      }),
+    );
   }
 
   void runPopupLoading() async {
@@ -2693,6 +2709,30 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
       },
     );
     await processAddCommand();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+  void runPopupLoading_move_to_train() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Processing'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              SizedBox(height: 20),
+              Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await move_all_to_train();
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -2836,7 +2876,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     return Column(
       children: [
         Container(
-          width: 1000,
+          width: 1300,
           height: 50,
           // color: Colors.amber,
           child: Row(
@@ -2849,7 +2889,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                 });},
                 color: widget.display_swich ? Color.fromARGB(255, 138, 148, 209):const Color(0xFF5A67BA),
                 child: const SizedBox(
-                  width: 200,
+                  width: 150,
                   child: Text(
                     "Good",
                     textAlign: TextAlign.center,
@@ -2865,7 +2905,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                 });},
                 color: widget.display_swich?const Color(0xFF5A67BA):Color.fromARGB(255, 138, 148, 209),
                 child: const SizedBox(
-                  width: 200,
+                  width: 150,
                   child: Text(
                     "Bad",
                     textAlign: TextAlign.center,
@@ -2880,7 +2920,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                 },
                 color: const Color(0xFF5A67BA),
                 child: const SizedBox(
-                  width: 200,
+                  width: 150,
                   child: Text(
                     "Process",
                     textAlign: TextAlign.center,
@@ -2889,6 +2929,22 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                   ),
                 ),
               ),
+              CupertinoButton(
+                onPressed: () {
+                  runPopupLoading_move_to_train();
+                },
+                color: const Color(0xFF5A67BA),
+                child: const SizedBox(
+                  width: 150,
+                  child: Text(
+                    "move to train",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),
@@ -2901,9 +2957,253 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   }
 }
 
+
+class DataCenter_for_train extends StatefulWidget {
+  DataCenter_for_train({super.key});
+  bool display_swich = true;
+
+  //good pool
+  List<String> list_image_good_pool = <String>[];
+  late List GoodPool_list;
+
+  //bad pool
+  List<String> list_image_bad_pool = <String>[];
+  late List badPool_list;
+
+
+  @override
+  State<DataCenter_for_train> createState() => _DataCenter_WidgetState_fortrain_model();
+}
+
+class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train> {
+
+  Future<void> runGetListFromGoodPool() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://210.246.215.145:1234/get_name_data_set_in_good_train'), // Replace with your backend URL
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      widget.GoodPool_list = responseData['files'];
+      widget.list_image_good_pool = [];
+      for(var i in widget.GoodPool_list){
+        widget.list_image_good_pool.add(i);
+      }
+      // print(responseData['files']);
+    }
+  }
+    Future<void> runGetListFromBadPool() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://210.246.215.145:1234/get_name_data_set_in_bad_train'), // Replace with your backend URL
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      widget.badPool_list = responseData['files'];
+      widget.list_image_bad_pool = [];
+      for(var i in widget.badPool_list){
+        widget.list_image_bad_pool.add(i);
+      }
+      // print(responseData['files']);
+    }
+  }
+    
+  Future<void> move_all_to_pool() async{
+    final response5 = await http.post(
+      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset_pool_to_train'),
+      headers: {
+        'Content-Type': 'application/json',  // Set content type to JSON
+      },
+      body: jsonEncode({
+        "mode":"train_to_pool",
+      }),
+    );
+  }
+
+  void runPopupLoading_move_to_pool() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Processing'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              SizedBox(height: 20),
+              Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await move_all_to_pool();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    // runGetListFromGoodPool();
+    // runGetListFromBadPool();
+    // runGetListFromGoodPool();
+    // runGetListFromBadPool();
+  }
+
+  Widget Goodrender_image(){
+    print(widget.list_image_good_pool);
+    return SizedBox(
+          height: 800,
+          width: 1600,
+          child: Container(
+            child: SingleChildScrollView(
+              child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                ),
+                itemCount: widget.list_image_good_pool.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    // color: Colors.blue,
+                    child: Column(
+                      children: [
+                        Image.network("http://210.246.215.145:1234/show/train_good/${widget.list_image_good_pool[index]}",
+                        height: 250,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+  }
+
+  Widget badrender_image(){
+    return SizedBox(
+          height: 800,
+          width: 1600,
+          child: Container(
+            child: SingleChildScrollView(
+              child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                ),
+                itemCount: widget.list_image_bad_pool.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    // color: Colors.blue,
+                    child: Column(
+                      children: [
+                        Image.network("http://210.246.215.145:1234/show/train_bad/${widget.list_image_bad_pool[index]}",
+                        height: 250,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+  }
+  
+  
+  void set_mode_display(){
+    setState(() {
+      widget.display_swich = !widget.display_swich;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 1300,
+          height: 50,
+          // color: Colors.amber,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CupertinoButton(
+                onPressed: () {setState(() {
+                  widget.display_swich = true;
+                  runGetListFromGoodPool();
+                });},
+                color: widget.display_swich ? Color.fromARGB(255, 138, 148, 209):const Color(0xFF5A67BA),
+                child: const SizedBox(
+                  width: 150,
+                  child: Text(
+                    "Good",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+              CupertinoButton(
+                onPressed: () {setState(() {
+                  widget.display_swich = false;
+                  runGetListFromBadPool();
+                });},
+                color: widget.display_swich?const Color(0xFF5A67BA):Color.fromARGB(255, 138, 148, 209),
+                child: const SizedBox(
+                  width: 150,
+                  child: Text(
+                    "Bad",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+              CupertinoButton(
+                onPressed: () {
+                  runPopupLoading_move_to_pool();
+                },
+                color: const Color(0xFF5A67BA),
+                child: const SizedBox(
+                  width: 150,
+                  child: Text(
+                    "move to pool",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 50,
+        ),
+        widget.display_swich?Goodrender_image():badrender_image(),
+      ],
+    );
+  }
+}
+
+
 _launchURL() async {
   final Uri url = Uri.parse(
-      'https://colab.research.google.com/drive/1WFscRj98nQ9Q-QrS4khYpyVtSvutAN27?usp=sharing');
+      'https://colab.research.google.com/drive/1Yq_w4lpbOx-ALFTP9RZY-fkpBkhsoLQp?usp=sharing');
   if (!await launchUrl(url)) {
     throw Exception('Could not launch');
   }
@@ -2956,24 +3256,8 @@ class ChartData_dasboard {
   ChartData_dasboard(this.x, this.y);
 }
 
-// class get_realtime_image{
-
-// }
-
-// class _ChartData {
-//   _ChartData(this.x, this.y);
-
-//   final String x;
-//   final double y;
-// }
-
-// class GUI_version_model extends Widget{
-
-// }
 Widget GUI_version_model(
     String globalVersion, String globalMse, String globalPerformance) {
-  // print("$choose_model_version $global_mse $global_performance");
-  // print("GUIIIIIIIIIIIIIII $globalVersion $globalMse $globalPerformance");
   return Stack(
     children: [
       Container(
