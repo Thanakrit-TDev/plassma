@@ -2451,11 +2451,21 @@ class DataCenter_Widget extends StatefulWidget {
   DataCenter_Widget({super.key});
   bool display_swich = true;
 
-
-  List<bool> list_bool_del = <bool>[];
+  //good pool
+  List<bool> list_bool_del_good = <bool>[];
   List<bool> list_bool_move_to_bad = <bool>[];
+  List<bool> list_bool_save_to_good = <bool>[];
   List<String> list_image_good_pool = <String>[];
   late List GoodPool_list;
+
+  //bad pool
+  List<bool> list_bool_del_bad = <bool>[];
+  List<bool> list_bool_move_to_good = <bool>[];
+  List<bool> list_bool_save_to_bad = <bool>[];
+  List<String> list_image_bad_pool = <String>[];
+  late List badPool_list;
+
+
   List<dynamic> list_model_in_com = [];
 
 
@@ -2464,25 +2474,65 @@ class DataCenter_Widget extends StatefulWidget {
 }
 
 class _DataCenter_WidgetState extends State<DataCenter_Widget> {
-  // final List<String> entries = <String>['A', 'B', 'C'];
-  // final List<int> colorCodes = <int>[600, 500, 100];
-
-
-
-
-
-      // bool _isChecked = false;
-  void _toggleCheckbox(bool? value, int index_list) {
+  //zone of good pool
+  void _toggleCheckbox_good(bool? value, int index_list) {
     setState(() {
-      // _isChecked = value ?? false;
-      widget.list_bool_del[index_list] = value ?? false;
+      widget.list_bool_del_good[index_list] = value ?? false;
+      if(widget.list_bool_del_good[index_list] == true){
+        widget.list_bool_move_to_bad[index_list] = false;
+        widget.list_bool_save_to_good[index_list] = false;
+      }
     });
   }
 
   void _toggleCheckbox_move_to_bad(bool? value, int index_list) {
     setState(() {
-      // _isChecked = value ?? false;
       widget.list_bool_move_to_bad[index_list] = value ?? false;
+      if(widget.list_bool_move_to_bad[index_list] == true){
+        widget.list_bool_del_good[index_list] = false;
+        widget.list_bool_save_to_good[index_list] = false;
+      }
+    });
+  }
+
+  void _toggleCheckbox_save_good_to_dataset(bool? value, int index_list) {
+    setState(() {
+      widget.list_bool_save_to_good[index_list] = value ?? false;
+      if(widget.list_bool_save_to_good[index_list] == true){
+        widget.list_bool_move_to_bad[index_list] = false;
+        widget.list_bool_del_good[index_list] = false;
+      }
+    });
+  }
+  //--end---
+  //zone of bad pool
+  void _toggleCheckbox_bad(bool? value, int index_list) {
+    setState(() {
+      widget.list_bool_del_bad[index_list] = value ?? false;
+      if(widget.list_bool_del_bad[index_list] == true){
+        widget.list_bool_move_to_good[index_list] = false;
+        widget.list_bool_save_to_bad[index_list] = false;
+      }
+    });
+  }
+
+  void _toggleCheckbox_move_to_good(bool? value, int index_list) {
+    setState(() {
+      widget.list_bool_move_to_good[index_list] = value ?? false;
+      if(widget.list_bool_move_to_good[index_list] == true){
+        widget.list_bool_del_bad[index_list] = false;
+        widget.list_bool_save_to_bad[index_list] = false;
+      }
+    });
+  }
+
+  void _toggleCheckbox_save_bad_to_dataset(bool? value, int index_list) {
+    setState(() {
+      widget.list_bool_save_to_bad[index_list] = value ?? false;
+      if(widget.list_bool_save_to_bad[index_list] == true){
+        widget.list_bool_move_to_good[index_list] = false;
+        widget.list_bool_del_bad[index_list] = false;
+      }
     });
   }
 
@@ -2495,29 +2545,168 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       widget.GoodPool_list = responseData['files'];
 
-      widget.list_bool_del = [];
+      widget.list_bool_del_good = [];
       widget.list_image_good_pool = [];
       widget.list_bool_move_to_bad = [];
 
       for(var i in widget.GoodPool_list){
-        widget.list_bool_del.add(false);
+        widget.list_bool_del_good.add(false);
         widget.list_bool_move_to_bad.add(false);
+        widget.list_bool_save_to_good.add(true);
         widget.list_image_good_pool.add(i);
       }
-      print(responseData['files']);
+      // print(responseData['files']);
     }
   }
+    Future<void> runGetListFromBadPool() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://210.246.215.145:1234/get_name_data_set_in_bad_pool'), // Replace with your backend URL
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      widget.badPool_list = responseData['files'];
+
+      widget.list_bool_del_bad = [];
+      widget.list_image_bad_pool = [];
+      widget.list_bool_move_to_good = [];
+
+      for(var i in widget.badPool_list){
+        widget.list_bool_del_bad.add(false);
+        widget.list_bool_move_to_good.add(false);
+        widget.list_bool_save_to_bad.add(true);
+        widget.list_image_bad_pool.add(i);
+      }
+      // print(responseData['files']);
+    }
+  }
+
+  Future<void> processAddCommand() async {
+    // await Future.delayed(Duration(seconds: 3)); // Replace with your actual task
+    //save to
+    List<String> buf_list_bool_save_to_good_name_file = [];
+    List<String> buf_list_bool_move_to_bad_name_file = [];
+    List<String> buf_list_bool_del_good_name_file = [];
+
+    for(int i =  0;i<widget.list_image_good_pool.length;i++){
+      if(widget.list_bool_save_to_good[i] == true){
+        buf_list_bool_save_to_good_name_file.add(widget.list_image_good_pool[i]);
+      }
+      if(widget.list_bool_move_to_bad[i] == true){
+        buf_list_bool_move_to_bad_name_file.add(widget.list_image_good_pool[i]);
+      }
+      if(widget.list_bool_del_good[i] == true){
+        buf_list_bool_del_good_name_file.add(widget.list_image_good_pool[i]);
+      }
+    }
+
+    List<String> buf_list_bool_save_to_bad_name_file = [];
+    List<String> buf_list_bool_move_to_good_name_file = [];
+    List<String> buf_list_bool_del_bad_name_file = [];
+
+    for(int i =  0;i<widget.list_image_bad_pool.length;i++){
+      if(widget.list_bool_save_to_bad[i] == true){
+        buf_list_bool_save_to_bad_name_file.add(widget.list_image_bad_pool[i]);
+      }
+      if(widget.list_bool_move_to_good[i] == true){
+        buf_list_bool_move_to_good_name_file.add(widget.list_image_bad_pool[i]);
+      }
+      if(widget.list_bool_del_bad[i] == true){
+        buf_list_bool_del_bad_name_file.add(widget.list_image_bad_pool[i]);
+      }
+    }
+
+    //pool good move to bad
+    final response1 = await http.post(
+      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
+      headers: {
+        'Content-Type': 'application/json',  // Set content type to JSON
+      },
+      body: jsonEncode({
+        "mode": "good_to_bad",
+        "filename": buf_list_bool_move_to_bad_name_file,
+      }),
+    );
+
+    //pool bad move to good
+    final response2 = await http.post(
+      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
+      headers: {
+        'Content-Type': 'application/json',  // Set content type to JSON
+      },
+      body: jsonEncode({
+        "mode": "bad_to_good",
+        "filename": buf_list_bool_move_to_good_name_file,
+      }),
+    );
+
+    //pool delets good
+    final response3 = await http.post(
+      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
+      headers: {
+        'Content-Type': 'application/json',  // Set content type to JSON
+      },
+      body: jsonEncode({
+        "mode": "delete",
+        "filename": buf_list_bool_del_good_name_file,
+        "folder_name": "good"
+      }),
+    );
+
+    //pool delets bad
+    final response4 = await http.post(
+      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
+      headers: {
+        'Content-Type': 'application/json',  // Set content type to JSON
+      },
+      body: jsonEncode({
+        "mode": "delete",
+        "filename": buf_list_bool_del_bad_name_file,
+        "folder_name": "bad"
+      }),
+    );
+    setState(() {
+      
+    });
+
+  }
+
+  void runPopupLoading() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Processing'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              SizedBox(height: 20),
+              Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await processAddCommand();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
 
   @override
   void initState() {
     super.initState();
     runGetListFromGoodPool();
+    runGetListFromBadPool();
+    runGetListFromGoodPool();
+    runGetListFromBadPool();
   }
 
   Widget Goodrender_image(){
-    print("workkkkk");
-    print(widget.list_bool_del);
-    print(widget.list_bool_move_to_bad);
     return SizedBox(
           height: 800,
           width: 1600,
@@ -2531,7 +2720,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                   crossAxisSpacing: 5.0,
                   mainAxisSpacing: 5.0,
                 ),
-                itemCount: widget.list_bool_del.length,
+                itemCount: widget.list_bool_del_good.length,
                 itemBuilder: (context, index) {
                   return Container(
                     // color: Colors.blue,
@@ -2546,15 +2735,22 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                             },
                           ),
                           Text("move to bad"),
-
-                          SizedBox(width: 50,),
+                          // SizedBox(width: 10,),
                           Checkbox(
-                            value: widget.list_bool_del[index],
+                            value: widget.list_bool_del_good[index],
                             onChanged: (bool? value) {
-                              _toggleCheckbox(value, index);
+                              _toggleCheckbox_good(value, index);
                             },
                           ),
                           Text("delet"),
+                          // SizedBox(width: 10,),
+                          Checkbox(
+                            value: widget.list_bool_save_to_good[index],
+                            onChanged: (bool? value) {
+                              _toggleCheckbox_save_good_to_dataset(value, index);
+                            },
+                          ),
+                          Text("save"),
                         ],),
                         Image.network("http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
                         height: 250,
@@ -2583,32 +2779,41 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                   crossAxisSpacing: 5.0,
                   mainAxisSpacing: 5.0,
                 ),
-                itemCount: widget.list_bool_del.length,
+                itemCount: widget.list_image_bad_pool.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    color: Colors.blue,
+                    // color: Colors.blue,
                     child: Column(
                       children: [
-                        // Image.network("https://cdn.pixabay.com/photo/2022/02/17/04/54/animal-7017939_1280.jpg",height: 100,),
                         Row(children: [
+                          SizedBox(width: 25,),
                           Checkbox(
-                            value: widget.list_bool_del[index],
+                            value: widget.list_bool_move_to_good[index],
                             onChanged: (bool? value) {
-                              _toggleCheckbox(value, index);
+                              _toggleCheckbox_move_to_good(value, index);
                             },
                           ),
                           Text("move to good"),
-                        ],),
-                        Row(children: [
+                          // SizedBox(width: 10,),
                           Checkbox(
-                            value: widget.list_bool_del[index],
+                            value: widget.list_bool_del_bad[index],
                             onChanged: (bool? value) {
-                              _toggleCheckbox(value, index);
+                              _toggleCheckbox_bad(value, index);
                             },
                           ),
                           Text("delet"),
+                          // SizedBox(width: 10,),
+                          Checkbox(
+                            value: widget.list_bool_save_to_bad[index],
+                            onChanged: (bool? value) {
+                              _toggleCheckbox_save_bad_to_dataset(value, index);
+                            },
+                          ),
+                          Text("save"),
                         ],),
-
+                        Image.network("http://210.246.215.145:1234/show/bad/${widget.list_image_bad_pool[index]}",
+                        height: 250,
+                        ),
                       ],
                     ),
                   );
@@ -2618,6 +2823,8 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
           ),
         );
   }
+  
+  
   void set_mode_display(){
     setState(() {
       widget.display_swich = !widget.display_swich;
@@ -2638,8 +2845,9 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
               CupertinoButton(
                 onPressed: () {setState(() {
                   widget.display_swich = true;
+                  runGetListFromGoodPool();
                 });},
-                color: const Color(0xFF5A67BA),
+                color: widget.display_swich ? Color.fromARGB(255, 138, 148, 209):const Color(0xFF5A67BA),
                 child: const SizedBox(
                   width: 200,
                   child: Text(
@@ -2653,8 +2861,9 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
               CupertinoButton(
                 onPressed: () {setState(() {
                   widget.display_swich = false;
+                  runGetListFromBadPool();
                 });},
-                color: const Color(0xFF5A67BA),
+                color: widget.display_swich?const Color(0xFF5A67BA):Color.fromARGB(255, 138, 148, 209),
                 child: const SizedBox(
                   width: 200,
                   child: Text(
@@ -2666,12 +2875,14 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                 ),
               ),
               CupertinoButton(
-                onPressed: () {},
+                onPressed: () {
+                  runPopupLoading();
+                },
                 color: const Color(0xFF5A67BA),
                 child: const SizedBox(
                   width: 200,
                   child: Text(
-                    "Save",
+                    "Process",
                     textAlign: TextAlign.center,
                     style:
                         TextStyle(color: Colors.white, fontFamily: 'Poppins'),
@@ -2697,19 +2908,6 @@ _launchURL() async {
     throw Exception('Could not launch');
   }
 }
-
-// class ChartData {
-//         ChartData(this.x, this.y, this.c);
-//         final String x;
-//         final double y;
-//         final Color c;
-//     }
-
-// class SalesData {
-//         SalesData(this.y, this.sales);
-//         final String y;
-//         final double sales;
-//     }
 
 class ChartData {
   ChartData(this.x, this.y);
