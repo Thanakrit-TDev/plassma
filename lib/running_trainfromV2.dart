@@ -2449,8 +2449,14 @@ class Train_Widget extends StatelessWidget {
 
 class DataCenter_Widget extends StatefulWidget {
   DataCenter_Widget({super.key});
-
   bool display_swich = true;
+
+
+  List<bool> list_bool_del = <bool>[];
+  List<bool> list_bool_move_to_bad = <bool>[];
+  List<String> list_image_good_pool = <String>[];
+  late List GoodPool_list;
+  List<dynamic> list_model_in_com = [];
 
 
   @override
@@ -2460,54 +2466,58 @@ class DataCenter_Widget extends StatefulWidget {
 class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   // final List<String> entries = <String>['A', 'B', 'C'];
   // final List<int> colorCodes = <int>[600, 500, 100];
-  List<bool> list_bool_del = <bool>[];
-  List<bool> list_bool_move_to_bad = <bool>[];
-  List<String> list_image_good_pool = <String>[];
 
-  // bool _isChecked = false;
+
+
+
+
+      // bool _isChecked = false;
   void _toggleCheckbox(bool? value, int index_list) {
     setState(() {
       // _isChecked = value ?? false;
-      list_bool_del[index_list] = value ?? false;
+      widget.list_bool_del[index_list] = value ?? false;
     });
   }
 
   void _toggleCheckbox_move_to_bad(bool? value, int index_list) {
     setState(() {
       // _isChecked = value ?? false;
-      list_bool_move_to_bad[index_list] = value ?? false;
+      widget.list_bool_move_to_bad[index_list] = value ?? false;
     });
   }
 
+  Future<void> runGetListFromGoodPool() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://210.246.215.145:1234/get_name_data_set_in_good_pool'), // Replace with your backend URL
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      widget.GoodPool_list = responseData['files'];
 
-  late List GoodPool_list;
-  List<dynamic> list_model_in_com = [];
-    void runGetListFromGoodPool() async {
-      final response = await http.get(
-        Uri.parse(
-            'http://210.246.215.145:1234/get_name_data_set_in_good_pool'), // Replace with your backend URL
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        GoodPool_list = responseData['files'];
+      widget.list_bool_del = [];
+      widget.list_image_good_pool = [];
+      widget.list_bool_move_to_bad = [];
 
-        list_bool_del = [];
-        list_image_good_pool = [];
-        list_bool_move_to_bad = [];
-
-        for(var i in GoodPool_list){
-          list_bool_del.add(false);
-          list_bool_move_to_bad.add(false);
-          list_image_good_pool.add(i);
-        }
-        print(responseData['files']);
+      for(var i in widget.GoodPool_list){
+        widget.list_bool_del.add(false);
+        widget.list_bool_move_to_bad.add(false);
+        widget.list_image_good_pool.add(i);
       }
+      print(responseData['files']);
     }
-  
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    runGetListFromGoodPool();
+  }
+
   Widget Goodrender_image(){
     print("workkkkk");
-    runGetListFromGoodPool();
-    // print(fetchPhotos(http.Client()));
+    print(widget.list_bool_del);
+    print(widget.list_bool_move_to_bad);
     return SizedBox(
           height: 800,
           width: 1600,
@@ -2521,7 +2531,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                   crossAxisSpacing: 5.0,
                   mainAxisSpacing: 5.0,
                 ),
-                itemCount: list_bool_del.length,
+                itemCount: widget.list_bool_del.length,
                 itemBuilder: (context, index) {
                   return Container(
                     // color: Colors.blue,
@@ -2530,7 +2540,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                         Row(children: [
                           SizedBox(width: 25,),
                           Checkbox(
-                            value: list_bool_move_to_bad[index],
+                            value: widget.list_bool_move_to_bad[index],
                             onChanged: (bool? value) {
                               _toggleCheckbox_move_to_bad(value, index);
                             },
@@ -2539,14 +2549,14 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
 
                           SizedBox(width: 50,),
                           Checkbox(
-                            value: list_bool_del[index],
+                            value: widget.list_bool_del[index],
                             onChanged: (bool? value) {
                               _toggleCheckbox(value, index);
                             },
                           ),
                           Text("delet"),
                         ],),
-                        Image.network("http://210.246.215.145:1234/show/good/${list_image_good_pool[index]}",
+                        Image.network("http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
                         height: 250,
                         ),
                       ],
@@ -2573,7 +2583,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                   crossAxisSpacing: 5.0,
                   mainAxisSpacing: 5.0,
                 ),
-                itemCount: list_bool_del.length,
+                itemCount: widget.list_bool_del.length,
                 itemBuilder: (context, index) {
                   return Container(
                     color: Colors.blue,
@@ -2582,7 +2592,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                         // Image.network("https://cdn.pixabay.com/photo/2022/02/17/04/54/animal-7017939_1280.jpg",height: 100,),
                         Row(children: [
                           Checkbox(
-                            value: list_bool_del[index],
+                            value: widget.list_bool_del[index],
                             onChanged: (bool? value) {
                               _toggleCheckbox(value, index);
                             },
@@ -2591,7 +2601,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                         ],),
                         Row(children: [
                           Checkbox(
-                            value: list_bool_del[index],
+                            value: widget.list_bool_del[index],
                             onChanged: (bool? value) {
                               _toggleCheckbox(value, index);
                             },
