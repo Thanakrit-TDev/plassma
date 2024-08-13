@@ -792,6 +792,7 @@ class _Running_WidgetState extends State<Running_Widget> {
     camera_setting();
     get_model_from_internet();
     get_list_model_inmycomputer();
+    print("kuy page 1");
     super.initState();
     Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
       if (!_updating) {
