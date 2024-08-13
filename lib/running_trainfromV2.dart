@@ -762,6 +762,42 @@ class _Running_WidgetState extends State<Running_Widget> {
     );
   }
 
+  Future<void> download_model_from_internet(String version_to_download) async{
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:5000/download_model_from_internet'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'download_model': version_to_download}),
+    );
+  }
+  void runPopupLoadingModel(String version_to_download) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Downloading'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              SizedBox(height: 20),
+              Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await download_model_from_internet(version_to_download);
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+  
+
   // @override
   // Future<void> sendData() async {
   //   // final String t = textUser.text;
@@ -959,7 +995,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                          onPressed: stModelIncom ? null : () {},
+                          onPressed: stModelIncom ? null : () {runPopupLoadingModel(version);},
                           child: const Text("Download")),
                       ElevatedButton(
                           onPressed: stModelIncom
