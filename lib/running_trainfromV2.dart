@@ -1,6 +1,6 @@
+// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-enum Options { option1, option2, option3, option4, option5, option6}
+enum Options { option1, option2, option3, option4, option5, option6 }
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _showFirstWidget = true;
@@ -205,7 +205,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class Running_Widget extends StatefulWidget {
   Running_Widget({super.key});
-
   // bool initialBoolean;
   // Running_Widget({required this.initialBoolean});
   @override
@@ -214,6 +213,7 @@ class Running_Widget extends StatefulWidget {
   String global_performance = "99";
 
   //disboard var
+
   bool st_swich_graph = false;
 
   @override
@@ -762,41 +762,41 @@ class _Running_WidgetState extends State<Running_Widget> {
     );
   }
 
-  Future<void> download_model_from_internet(String version_to_download) async{
+  Future<void> download_model_from_internet(String versionToDownload) async {
     final response = await http.post(
       Uri.parse(
           'http://127.0.0.1:5000/download_model_from_internet'), // Replace with your backend URL
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{'download_model': version_to_download}),
+      body: jsonEncode(<String, String>{'download_model': versionToDownload}),
     );
   }
-  void runPopupLoadingModel(String version_to_download) async {
+
+  void runPopupLoadingModel(String versionToDownload) async {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Downloading'),
+              const Text('Downloading'),
               LoadingAnimationWidget.dotsTriangle(
-                color: Color.fromARGB(255, 106, 55, 248),
+                color: const Color.fromARGB(255, 106, 55, 248),
                 size: 150,
               ),
-              SizedBox(height: 20),
-              Text('Please wait...'),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
             ],
           ),
         );
       },
     );
-    await download_model_from_internet(version_to_download);
+    await download_model_from_internet(versionToDownload);
     Navigator.of(context, rootNavigator: true).pop();
   }
-  
 
   // @override
   // Future<void> sendData() async {
@@ -820,6 +820,8 @@ class _Running_WidgetState extends State<Running_Widget> {
   // String imageUrl_qr = "http://127.0.0.1:5000/image_qr";
   bool _updating = false;
 
+  // GlobalData_Version_model().setdata_GlobalVersion(widget.global_version, widget.global_mse, widget.global_performance);
+  // GlobalData_Version_model_kuy().setdata_global_version("3","3","3");
   // function prototype
 
   @override
@@ -925,6 +927,8 @@ class _Running_WidgetState extends State<Running_Widget> {
           st_model_incom: stModelInPc);
     }).toList();
 
+    GlobalData_model_for_web().addData(models);
+
     final List<Hislist> Historylist =
         datatemset.keys.toList().asMap().entries.map((entry) {
       int index = entry.key;
@@ -940,6 +944,8 @@ class _Running_WidgetState extends State<Running_Widget> {
           id: key.toString());
     }).toList();
 
+    GlobalData().addData(Historylist);
+    // widget.hislist_gobals = Historylist;
     //apply model-------------------------------------------------------
     // final global_version = TextEditingController();
     // final global_mse = TextEditingController();
@@ -965,6 +971,82 @@ class _Running_WidgetState extends State<Running_Widget> {
       // print("modelllllll");
     }
     //apply------------------------------------------------------------
+
+    //function run sync data setting
+    Future<void> run_sync_data_setting() async {
+      final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:5000/sync_setting_from_database'), // Replace with your backend URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // body: jsonEncode(<String, String>{'download_model': version_to_download}),
+      );
+    }
+
+    void Popup_run_sync_data_setting() async {
+      print("Popup_run_sync_data_setting");
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text('Sync setting'),
+                LoadingAnimationWidget.dotsTriangle(
+                  color: const Color.fromARGB(255, 106, 55, 248),
+                  size: 150,
+                ),
+                const SizedBox(height: 20),
+                const Text('Please wait...'),
+              ],
+            ),
+          );
+        },
+      );
+      await run_sync_data_setting();
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+
+    Future<void> run_save_data_setting() async {
+      final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:5000/save_setting_from_database'), // Replace with your backend URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // body: jsonEncode(<String, String>{'download_model': version_to_download}),
+      );
+    }
+
+    void Popup_run_save_data_setting() async {
+      print("Popup_run_sync_data_setting");
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text('save setting'),
+                LoadingAnimationWidget.dotsTriangle(
+                  color: const Color.fromARGB(255, 106, 55, 248),
+                  size: 150,
+                ),
+                const SizedBox(height: 20),
+                const Text('Please wait...'),
+              ],
+            ),
+          );
+        },
+      );
+      await run_save_data_setting();
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+//end--------------------------------------------------
 
     void changeStateModelversion(String version, bool stModelIncom) {
       showDialog(
@@ -995,7 +1077,11 @@ class _Running_WidgetState extends State<Running_Widget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                          onPressed: stModelIncom ? null : () {runPopupLoadingModel(version);},
+                          onPressed: stModelIncom
+                              ? null
+                              : () {
+                                  runPopupLoadingModel(version);
+                                },
                           child: const Text("Download")),
                       ElevatedButton(
                           onPressed: stModelIncom
@@ -1029,7 +1115,23 @@ class _Running_WidgetState extends State<Running_Widget> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("Load History"),
+            title: Row(
+              children: [
+                const Text("Load History"),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                    onPressed: Popup_run_sync_data_setting,
+                    child: const Text("sync")),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                    onPressed: Popup_run_save_data_setting,
+                    child: const Text("save to data base")),
+              ],
+            ),
             content: SizedBox(
               height: 300,
               width: 800,
@@ -1552,25 +1654,536 @@ class Dashboard_Widget extends StatefulWidget {
   bool st_download_his = true;
   //---------------
 
+  String global_version = "1.0.0";
+  String global_mse = "0.001";
+  String global_performance = "99";
+
   @override
   State<Dashboard_Widget> createState() => _Dashboard_Widget();
 }
 
-// class _Dashboard_Widget extends StatelessWidget {
 class _Dashboard_Widget extends State<Dashboard_Widget> {
-  // _Dashboard_Widget({super.key});
+  final tube_hight = TextEditingController();
+  final tube_diameter = TextEditingController();
+  final tube_px = TextEditingController();
+  final tube_mm = TextEditingController();
+  final tube_name_setting = TextEditingController();
+  final name_setting_now = TextEditingController();
 
   @override
-  final List<Model> modelsV2 = List.generate(
-    10,
-    (index) => Model(
-        filename: 'Model $index',
-        mse: '${index + 1.0}.0',
-        rate: '${index + 80}%',
-        version: '$index',
-        performance: '$index',
-        st_model_incom: false),
-  );
+  Future<void> settingapp() async {
+    final String tubeHightStr = tube_hight.text;
+    final String tubeDiameterStr = tube_diameter.text;
+    final String tubePxStr = tube_px.text;
+    final String tubeMmStr = tube_mm.text;
+    final String tubeNameSettingStr = tube_name_setting.text;
+
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:5000/setting'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'time_save': (DateTime.now().millisecondsSinceEpoch).toString(),
+        'tube_name_setting_str': tubeNameSettingStr,
+        'tube_hight_str': tubeHightStr,
+        'tube_diameter_str': tubeDiameterStr,
+        'tube_px_str': tubePxStr,
+        'tube_mm_str': tubeMmStr,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      print('Response data: ${responseData['st']}');
+      if (responseData['stsave']) {
+        use_now_setting();
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              // title: Text("Model version $version"),
+              content: const SizedBox(
+                height: 50,
+                width: 200,
+                child: Column(
+                  children: [
+                    Center(
+                      child: Row(children: [
+                        Icon(
+                          Icons.report_problem,
+                          color: Colors.amber,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "save Failed",
+                          style: TextStyle(fontSize: 25),
+                        )
+                      ]),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // title: Text("Model version $version"),
+            content: const SizedBox(
+              height: 50,
+              width: 200,
+              child: Column(
+                children: [
+                  Center(
+                    child: Row(children: [
+                      Icon(
+                        Icons.report_problem,
+                        color: Colors.amber,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        "save Failed",
+                        style: TextStyle(fontSize: 25),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  var datatemset = {};
+  void use_now_setting() async {
+    print("use now setting");
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:5000/loadsetting'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      datatemset = responseData['data'];
+      // print(datatemset);
+    }
+
+    var kInDatatemset;
+    var vInDatatemset;
+    datatemset.forEach(
+      (key, value) {
+        kInDatatemset = key;
+        vInDatatemset = value;
+      },
+    );
+    
+    setState(() {
+      tube_name_setting.text = datatemset[kInDatatemset]['name'].toString();
+      tube_hight.text = datatemset[kInDatatemset]['tube_hight'].toString();
+      tube_diameter.text = datatemset[kInDatatemset]['tube_diameter'].toString();
+      tube_px.text = datatemset[kInDatatemset]['px'].toString();
+      tube_mm.text = datatemset[kInDatatemset]['mm'].toString();
+    });
+  }
+
+  void use_setting_this(String idSetting) async {
+    // print(id_setting);
+    // send old time and new time to server
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:5000/usesettingthis'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'new_id': (DateTime.now().millisecondsSinceEpoch).toString(),
+        'old_id': idSetting,
+      }),
+    );
+    if (response.statusCode == 200) {
+      use_now_setting();
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // title: Text("Model version $version"),
+            content: const SizedBox(
+              height: 50,
+              width: 200,
+              child: Column(
+                children: [
+                  Center(
+                    child: Row(children: [
+                      Icon(
+                        Icons.report_problem,
+                        color: Colors.amber,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        "can't use templat (Server error)!",
+                        style: TextStyle(fontSize: 25),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void delete_setting_this(String idSetting) async {
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:5000/deletesettingthis'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'new_id': (DateTime.now().millisecondsSinceEpoch).toString(),
+        'old_id': idSetting,
+      }),
+    );
+    if (response.statusCode == 200) {
+      use_now_setting();
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // title: Text("Model version $version"),
+            content: const SizedBox(
+              height: 50,
+              width: 200,
+              child: Column(
+                children: [
+                  Center(
+                    child: Row(children: [
+                      Icon(
+                        Icons.report_problem,
+                        color: Colors.amber,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        "can't delete templat (Server error)!",
+                        style: TextStyle(fontSize: 25),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  // send command zone----------------------------
+  List<dynamic> data_list_command = [];
+
+  final commandcontrol = TextEditingController();
+  void send_command() async {
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:5000/command_send'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'command': commandcontrol.text,
+      }),
+    );
+    if (response.statusCode == 200) {
+      data_list_command.add(commandcontrol.text);
+      commandcontrol.text = '';
+      use_now_setting();
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // title: Text("Model version $version"),
+            content: const SizedBox(
+              height: 50,
+              width: 200,
+              child: Column(
+                children: [
+                  Center(
+                    child: Row(children: [
+                      Icon(
+                        Icons.report_problem,
+                        color: Colors.amber,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        "can't send command (Server error)!",
+                        style: TextStyle(fontSize: 25),
+                      )
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+  // send command zone----------------------------
+
+  Future<void> run_sync_data_setting() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:5000/sync_setting_from_database'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      // body: jsonEncode(<String, String>{'download_model': version_to_download}),
+    );
+  }
+
+  void Popup_run_sync_data_setting() async {
+    print("Popup_run_sync_data_setting");
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text('Sync setting'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: const Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await run_sync_data_setting();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future<void> run_save_data_setting() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:5000/save_setting_from_database'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      // body: jsonEncode(<String, String>{'download_model': version_to_download}),
+    );
+  }
+
+  void Popup_run_save_data_setting() async {
+    print("Popup_run_sync_data_setting");
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text('save setting'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: const Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await run_save_data_setting();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  List<Hislist> Historylist = GlobalData().getData();
+//end--------------------------------------------------
+
+  void changeStateSetting() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Text("Load History"),
+              const SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                  onPressed: Popup_run_sync_data_setting, child: const Text("sync")),
+              const SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                  onPressed: Popup_run_save_data_setting,
+                  child: const Text("save to data base")),
+            ],
+          ),
+          content: SizedBox(
+            height: 300,
+            width: 800,
+            child: Column(
+              children: [
+                // Wrapping ListView.builder in an Expanded widget
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: Historylist.length,
+                    // itemCount:5,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          ListTile(
+                            title: Row(
+                              children: [
+                                Text(Historylist[index].name),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Text("Height ${Historylist[index].tube_hight}"),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                    "Diameter ${Historylist[index].tube_diameter}"),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Text("px ${Historylist[index].px}"),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Text("mm ${Historylist[index].mm}"),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      use_setting_this(Historylist[index].id);
+                                    },
+                                    child: const Text('Use')),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      delete_setting_this(
+                                          Historylist[index].id);
+                                    },
+                                    child: const Text('Delete')),
+                              ],
+                            ),
+                          ),
+                          const Divider(color: Colors.black),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  
+
+
+  // @override
+  // final List<Model> modelsV2 = List.generate(
+  //   10,
+  //   (index) => Model(
+  //       filename: 'Model $index',
+  //       mse: '${index + 1.0}.0',
+  //       rate: '${index + 80}%',
+  //       version: '$index',
+  //       performance: '$index',
+  //       st_model_incom: false),
+  // );
 
   // schedule-------------------------------------------------
   void schedule_end() {
@@ -1806,14 +2419,33 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
     }
   }
 
+
+  List<Model> models_from_server = GlobalData_model_for_web().getData();
+
+  void apply_show_version_model(String chooseModelVersion) {
+      for (var run_version in models_from_server) {
+        if (chooseModelVersion == run_version.version) {
+          setState(() {
+            widget.global_version = run_version.version;
+            widget.global_mse = run_version.mse;
+            widget.global_performance = run_version.performance;
+            GUI_version_model_V2(widget.global_version, widget.global_mse,
+                widget.global_performance);
+          });
+          break;
+        }
+      }
+      // print("modelllllll");
+    }
+  
+
   @override
   void initState() {
     super.initState();
-    // Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
-    // if (!_updating) {
-    //   _updateImage();
-    // }
-    // });
+    use_now_setting();
+
+    // List<String> dataVersion = GlobalData_Version_model.getData();
+
   }
 
   @override
@@ -1992,150 +2624,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                   height: 450,
                                   color:
                                       const Color.fromARGB(255, 255, 255, 255),
-                                  child: Column(
-                                    // mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      const Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Training Rate",
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontFamily: 'Poppins'),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              width: 350,
-                                              height: 350,
-                                              color: const Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              child: Stack(
-                                                children: [
-                                                  Container(
-                                                    width: 350,
-                                                    height: 350,
-                                                    color: const Color.fromARGB(
-                                                        255, 255, 255, 255),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Image.asset(
-                                                            "images/canvas.png",
-                                                            fit: BoxFit.fill),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const Positioned(
-                                                    left: 100, // ระบุค่าพิกัด x
-                                                    top: 100, // ระบุค่าพิกัด y
-                                                    child: Text(
-                                                      "1.1.0",
-                                                      style: TextStyle(
-                                                          fontSize: 25,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              255,
-                                                              255),
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                  const Positioned(
-                                                    left: 70, // ระบุค่าพิกัด x
-                                                    top: 140, // ระบุค่าพิกัด y
-                                                    child: Text(
-                                                      "Model version",
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              255,
-                                                              255),
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                  const Positioned(
-                                                    left: 200, // ระบุค่าพิกัด x
-                                                    top: 150, // ระบุค่าพิกัด y
-                                                    child: Text(
-                                                      "001%",
-                                                      style: TextStyle(
-                                                          fontSize: 40,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              255,
-                                                              255),
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                  const Positioned(
-                                                    left: 230, // ระบุค่าพิกัด x
-                                                    top: 200, // ระบุค่าพิกัด y
-                                                    child: Text(
-                                                      "MSE",
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              255,
-                                                              255),
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                  const Positioned(
-                                                    left: 55, // ระบุค่าพิกัด x
-                                                    top: 240, // ระบุค่าพิกัด y
-                                                    child: Text(
-                                                      "99%",
-                                                      style: TextStyle(
-                                                          fontSize: 25,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              255,
-                                                              255),
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                  const Positioned(
-                                                    left: 30, // ระบุค่าพิกัด x
-                                                    top: 280, // ระบุค่าพิกัด y
-                                                    child: Text(
-                                                      "Performance",
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              255,
-                                                              255),
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  child: GUI_version_model_V2(widget.global_version,widget.global_mse, widget.global_performance),
                                 ),
                               ],
                             ),
@@ -2168,7 +2657,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                   color:
                                       const Color.fromARGB(255, 255, 255, 255),
                                   child: ListView.builder(
-                                    itemCount: modelsV2
+                                    itemCount: models_from_server
                                         .length, // replace `models` with your data source
                                     itemBuilder: (context, index) {
                                       return ListTile(
@@ -2186,17 +2675,17 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                               const SizedBox(
                                                 width: 30,
                                               ),
-                                              Text(modelsV2[index].version),
+                                              Text(models_from_server[index].version),
                                               const SizedBox(
                                                 width: 100,
                                               ),
                                               Text(
-                                                  "Rate ${modelsV2[index].rate}"),
+                                                  "Rate ${models_from_server[index].rate}"),
                                               const SizedBox(
                                                 width: 30,
                                               ),
                                               IconButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {apply_show_version_model(models_from_server[index].version);},
                                                   icon: const Icon(
                                                       Icons.arrow_forward_ios))
                                             ],
@@ -2238,12 +2727,60 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text("Setting Name : kuytest"),
+                                  Text(
+                                      "Setting Name : ${tube_name_setting.text}"),
                                   const SizedBox(
                                     width: 50,
                                   ),
                                   ElevatedButton(
-                                      onPressed: () {},
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text("setting name"),
+                                              content: SizedBox(
+                                                width: 400,
+                                                height: 100,
+                                                child: Column(
+                                                  children: [
+                                                    TextField(
+                                                      controller:
+                                                          name_setting_now,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        tube_name_setting.text =name_setting_now.text;
+                                                      });
+                                                    },
+                                                    child: const Text(
+                                                      "save",
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                    )),
+                                                TextButton(
+                                                  child: const Text(
+                                                    "OK",
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: const Icon(Icons.edit),
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: changeStateSetting,
                                       child: const Row(
                                         children: [Text("Load History")],
                                       ))
@@ -2261,13 +2798,12 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                             Container(
                               child: Row(
                                 children: [
-                                  const SizedBox(
-                                    width: 300,
-                                    child: TextField(),
+                                  SizedBox(
+                                    width: 400,
+                                    child: TextField(
+                                      controller: tube_hight,
+                                    ),
                                   ),
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: const Text("Save"))
                                 ],
                               ),
                             ),
@@ -2281,13 +2817,12 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                             Container(
                               child: Row(
                                 children: [
-                                  const SizedBox(
-                                    width: 300,
-                                    child: TextField(),
+                                  SizedBox(
+                                    width: 400,
+                                    child: TextField(
+                                      controller: tube_diameter,
+                                    ),
                                   ),
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: const Text("Save"))
                                 ],
                               ),
                             ),
@@ -2301,21 +2836,39 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                             Container(
                               child: Row(
                                 children: [
-                                  const SizedBox(
-                                    width: 140,
-                                    child: TextField(),
+                                  SizedBox(
+                                    width: 190,
+                                    child: TextField(
+                                      controller: tube_px,
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 20,
                                   ),
-                                  const SizedBox(
-                                    width: 140,
-                                    child: TextField(),
+                                  SizedBox(
+                                    width: 190,
+                                    child: TextField(
+                                      controller: tube_mm,
+                                    ),
                                   ),
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: const Text("Save"))
                                 ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            CupertinoButton(
+                              onPressed: settingapp,
+                              color: const Color(0xFF5A67BA),
+                              child: const SizedBox(
+                                width: 400,
+                                child: Text(
+                                  "save",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins'),
+                                ),
                               ),
                             ),
                           ]),
@@ -2480,6 +3033,7 @@ class _Train_WidgetState extends State<Train_Widget> {
     super.initState();
     _launchURL();
   }
+
   @override
   Widget build(BuildContext context) {
     return const Column(
@@ -2509,9 +3063,7 @@ class DataCenter_Widget extends StatefulWidget {
   List<String> list_image_bad_pool = <String>[];
   late List badPool_list;
 
-
   List<dynamic> list_model_in_com = [];
-
 
   @override
   State<DataCenter_Widget> createState() => _DataCenter_WidgetState();
@@ -2519,63 +3071,64 @@ class DataCenter_Widget extends StatefulWidget {
 
 class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   //zone of good pool
-  void _toggleCheckbox_good(bool? value, int index_list) {
+  void _toggleCheckbox_good(bool? value, int indexList) {
     setState(() {
-      widget.list_bool_del_good[index_list] = value ?? false;
-      if(widget.list_bool_del_good[index_list] == true){
-        widget.list_bool_move_to_bad[index_list] = false;
-        widget.list_bool_save_to_good[index_list] = false;
+      widget.list_bool_del_good[indexList] = value ?? false;
+      if (widget.list_bool_del_good[indexList] == true) {
+        widget.list_bool_move_to_bad[indexList] = false;
+        widget.list_bool_save_to_good[indexList] = false;
       }
     });
   }
 
-  void _toggleCheckbox_move_to_bad(bool? value, int index_list) {
+  void _toggleCheckbox_move_to_bad(bool? value, int indexList) {
     setState(() {
-      widget.list_bool_move_to_bad[index_list] = value ?? false;
-      if(widget.list_bool_move_to_bad[index_list] == true){
-        widget.list_bool_del_good[index_list] = false;
-        widget.list_bool_save_to_good[index_list] = false;
+      widget.list_bool_move_to_bad[indexList] = value ?? false;
+      if (widget.list_bool_move_to_bad[indexList] == true) {
+        widget.list_bool_del_good[indexList] = false;
+        widget.list_bool_save_to_good[indexList] = false;
       }
     });
   }
 
-  void _toggleCheckbox_save_good_to_dataset(bool? value, int index_list) {
+  void _toggleCheckbox_save_good_to_dataset(bool? value, int indexList) {
     setState(() {
-      widget.list_bool_save_to_good[index_list] = value ?? false;
-      if(widget.list_bool_save_to_good[index_list] == true){
-        widget.list_bool_move_to_bad[index_list] = false;
-        widget.list_bool_del_good[index_list] = false;
+      widget.list_bool_save_to_good[indexList] = value ?? false;
+      if (widget.list_bool_save_to_good[indexList] == true) {
+        widget.list_bool_move_to_bad[indexList] = false;
+        widget.list_bool_del_good[indexList] = false;
       }
     });
   }
+
   //--end---
   //zone of bad pool
-  void _toggleCheckbox_bad(bool? value, int index_list) {
+  void _toggleCheckbox_bad(bool? value, int indexList) {
     setState(() {
-      widget.list_bool_del_bad[index_list] = value ?? false;
-      if(widget.list_bool_del_bad[index_list] == true){
-        widget.list_bool_move_to_good[index_list] = false;
-        widget.list_bool_save_to_bad[index_list] = false;
+      widget.list_bool_del_bad[indexList] = value ?? false;
+      if (widget.list_bool_del_bad[indexList] == true) {
+        widget.list_bool_move_to_good[indexList] = false;
+        widget.list_bool_save_to_bad[indexList] = false;
       }
     });
   }
 
-  void _toggleCheckbox_move_to_good(bool? value, int index_list) {
+  void _toggleCheckbox_move_to_good(bool? value, int indexList) {
     setState(() {
-      widget.list_bool_move_to_good[index_list] = value ?? false;
-      if(widget.list_bool_move_to_good[index_list] == true){
-        widget.list_bool_del_bad[index_list] = false;
-        widget.list_bool_save_to_bad[index_list] = false;
+      widget.list_bool_move_to_good[indexList] = value ?? false;
+      if (widget.list_bool_move_to_good[indexList] == true) {
+        widget.list_bool_del_bad[indexList] = false;
+        widget.list_bool_save_to_bad[indexList] = false;
       }
     });
   }
 
-  void _toggleCheckbox_save_bad_to_dataset(bool? value, int index_list) {
+  void _toggleCheckbox_save_bad_to_dataset(bool? value, int indexList) {
     setState(() {
-      widget.list_bool_save_to_bad[index_list] = value ?? false;
-      if(widget.list_bool_save_to_bad[index_list] == true){
-        widget.list_bool_move_to_good[index_list] = false;
-        widget.list_bool_del_bad[index_list] = false;
+      widget.list_bool_save_to_bad[indexList] = value ?? false;
+      if (widget.list_bool_save_to_bad[indexList] == true) {
+        widget.list_bool_move_to_good[indexList] = false;
+        widget.list_bool_del_bad[indexList] = false;
       }
     });
   }
@@ -2593,7 +3146,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
       widget.list_image_good_pool = [];
       widget.list_bool_move_to_bad = [];
 
-      for(var i in widget.GoodPool_list){
+      for (var i in widget.GoodPool_list) {
         widget.list_bool_del_good.add(false);
         widget.list_bool_move_to_bad.add(false);
         widget.list_bool_save_to_good.add(true);
@@ -2602,7 +3155,8 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
       // print(responseData['files']);
     }
   }
-    Future<void> runGetListFromBadPool() async {
+
+  Future<void> runGetListFromBadPool() async {
     final response = await http.get(
       Uri.parse(
           'http://210.246.215.145:1234/get_name_data_set_in_bad_pool'), // Replace with your backend URL
@@ -2615,7 +3169,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
       widget.list_image_bad_pool = [];
       widget.list_bool_move_to_good = [];
 
-      for(var i in widget.badPool_list){
+      for (var i in widget.badPool_list) {
         widget.list_bool_del_bad.add(false);
         widget.list_bool_move_to_good.add(false);
         widget.list_bool_save_to_bad.add(true);
@@ -2628,35 +3182,36 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   Future<void> processAddCommand() async {
     // await Future.delayed(Duration(seconds: 3)); // Replace with your actual task
     //save to
-    List<String> buf_list_bool_save_to_good_name_file = [];
-    List<String> buf_list_bool_move_to_bad_name_file = [];
-    List<String> buf_list_bool_del_good_name_file = [];
+    List<String> bufListBoolSaveToGoodNameFile = [];
+    List<String> bufListBoolMoveToBadNameFile = [];
+    List<String> bufListBoolDelGoodNameFile = [];
 
-    for(int i =  0;i<widget.list_image_good_pool.length;i++){
-      if(widget.list_bool_save_to_good[i] == true){
-        buf_list_bool_save_to_good_name_file.add(widget.list_image_good_pool[i]);
+    for (int i = 0; i < widget.list_image_good_pool.length; i++) {
+      if (widget.list_bool_save_to_good[i] == true) {
+        bufListBoolSaveToGoodNameFile
+            .add(widget.list_image_good_pool[i]);
       }
-      if(widget.list_bool_move_to_bad[i] == true){
-        buf_list_bool_move_to_bad_name_file.add(widget.list_image_good_pool[i]);
+      if (widget.list_bool_move_to_bad[i] == true) {
+        bufListBoolMoveToBadNameFile.add(widget.list_image_good_pool[i]);
       }
-      if(widget.list_bool_del_good[i] == true){
-        buf_list_bool_del_good_name_file.add(widget.list_image_good_pool[i]);
+      if (widget.list_bool_del_good[i] == true) {
+        bufListBoolDelGoodNameFile.add(widget.list_image_good_pool[i]);
       }
     }
 
-    List<String> buf_list_bool_save_to_bad_name_file = [];
-    List<String> buf_list_bool_move_to_good_name_file = [];
-    List<String> buf_list_bool_del_bad_name_file = [];
+    List<String> bufListBoolSaveToBadNameFile = [];
+    List<String> bufListBoolMoveToGoodNameFile = [];
+    List<String> bufListBoolDelBadNameFile = [];
 
-    for(int i =  0;i<widget.list_image_bad_pool.length;i++){
-      if(widget.list_bool_save_to_bad[i] == true){
-        buf_list_bool_save_to_bad_name_file.add(widget.list_image_bad_pool[i]);
+    for (int i = 0; i < widget.list_image_bad_pool.length; i++) {
+      if (widget.list_bool_save_to_bad[i] == true) {
+        bufListBoolSaveToBadNameFile.add(widget.list_image_bad_pool[i]);
       }
-      if(widget.list_bool_move_to_good[i] == true){
-        buf_list_bool_move_to_good_name_file.add(widget.list_image_bad_pool[i]);
+      if (widget.list_bool_move_to_good[i] == true) {
+        bufListBoolMoveToGoodNameFile.add(widget.list_image_bad_pool[i]);
       }
-      if(widget.list_bool_del_bad[i] == true){
-        buf_list_bool_del_bad_name_file.add(widget.list_image_bad_pool[i]);
+      if (widget.list_bool_del_bad[i] == true) {
+        bufListBoolDelBadNameFile.add(widget.list_image_bad_pool[i]);
       }
     }
 
@@ -2664,11 +3219,11 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     final response1 = await http.post(
       Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
       headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
+        'Content-Type': 'application/json', // Set content type to JSON
       },
       body: jsonEncode({
         "mode": "good_to_bad",
-        "filename": buf_list_bool_move_to_bad_name_file,
+        "filename": bufListBoolMoveToBadNameFile,
       }),
     );
 
@@ -2676,11 +3231,11 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     final response2 = await http.post(
       Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
       headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
+        'Content-Type': 'application/json', // Set content type to JSON
       },
       body: jsonEncode({
         "mode": "bad_to_good",
-        "filename": buf_list_bool_move_to_good_name_file,
+        "filename": bufListBoolMoveToGoodNameFile,
       }),
     );
 
@@ -2688,11 +3243,11 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     final response3 = await http.post(
       Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
       headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
+        'Content-Type': 'application/json', // Set content type to JSON
       },
       body: jsonEncode({
         "mode": "delete",
-        "filename": buf_list_bool_del_good_name_file,
+        "filename": bufListBoolDelGoodNameFile,
         "folder_name": "good"
       }),
     );
@@ -2701,25 +3256,26 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     final response4 = await http.post(
       Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset'),
       headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
+        'Content-Type': 'application/json', // Set content type to JSON
       },
       body: jsonEncode({
         "mode": "delete",
-        "filename": buf_list_bool_del_bad_name_file,
+        "filename": bufListBoolDelBadNameFile,
         "folder_name": "bad"
       }),
     );
     setState(() {});
   }
 
-  Future<void> move_all_to_train() async{
+  Future<void> move_all_to_train() async {
     final response5 = await http.post(
-      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset_pool_to_train'),
+      Uri.parse(
+          'http://210.246.215.145:1234/move_or_delete_dataset_pool_to_train'),
       headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
+        'Content-Type': 'application/json', // Set content type to JSON
       },
       body: jsonEncode({
-        "mode":"pool_to_train",
+        "mode": "pool_to_train",
       }),
     );
   }
@@ -2727,19 +3283,19 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   void runPopupLoading() async {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Processing'),
+              const Text('Processing'),
               LoadingAnimationWidget.dotsTriangle(
-                color: Color.fromARGB(255, 106, 55, 248),
+                color: const Color.fromARGB(255, 106, 55, 248),
                 size: 150,
               ),
-              SizedBox(height: 20),
-              Text('Please wait...'),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
             ],
           ),
         );
@@ -2748,22 +3304,23 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     await processAddCommand();
     Navigator.of(context, rootNavigator: true).pop();
   }
+
   void runPopupLoading_move_to_train() async {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Processing'),
+              const Text('Processing'),
               LoadingAnimationWidget.dotsTriangle(
-                color: Color.fromARGB(255, 106, 55, 248),
+                color: const Color.fromARGB(255, 106, 55, 248),
                 size: 150,
               ),
-              SizedBox(height: 20),
-              Text('Please wait...'),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
             ],
           ),
         );
@@ -2772,7 +3329,6 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     await move_all_to_train();
     Navigator.of(context, rootNavigator: true).pop();
   }
-
 
   @override
   void initState() {
@@ -2783,126 +3339,135 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     runGetListFromBadPool();
   }
 
-  Widget Goodrender_image(){
+  Widget Goodrender_image() {
     return SizedBox(
-          height: 800,
-          width: 1600,
-          child: Container(
-            child: SingleChildScrollView(
-              child: GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                ),
-                itemCount: widget.list_bool_del_good.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    // color: Colors.blue,
-                    child: Column(
+      height: 800,
+      width: 1600,
+      child: Container(
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+            ),
+            itemCount: widget.list_bool_del_good.length,
+            itemBuilder: (context, index) {
+              return Container(
+                // color: Colors.blue,
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(children: [
-                          SizedBox(width: 25,),
-                          Checkbox(
-                            value: widget.list_bool_move_to_bad[index],
-                            onChanged: (bool? value) {
-                              _toggleCheckbox_move_to_bad(value, index);
-                            },
-                          ),
-                          Text("move to bad"),
-                          // SizedBox(width: 10,),
-                          Checkbox(
-                            value: widget.list_bool_del_good[index],
-                            onChanged: (bool? value) {
-                              _toggleCheckbox_good(value, index);
-                            },
-                          ),
-                          Text("delet"),
-                          // SizedBox(width: 10,),
-                          Checkbox(
-                            value: widget.list_bool_save_to_good[index],
-                            onChanged: (bool? value) {
-                              _toggleCheckbox_save_good_to_dataset(value, index);
-                            },
-                          ),
-                          Text("save"),
-                        ],),
-                        Image.network("http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
-                        height: 250,
+                        const SizedBox(
+                          width: 25,
                         ),
+                        Checkbox(
+                          value: widget.list_bool_move_to_bad[index],
+                          onChanged: (bool? value) {
+                            _toggleCheckbox_move_to_bad(value, index);
+                          },
+                        ),
+                        const Text("move to bad"),
+                        // SizedBox(width: 10,),
+                        Checkbox(
+                          value: widget.list_bool_del_good[index],
+                          onChanged: (bool? value) {
+                            _toggleCheckbox_good(value, index);
+                          },
+                        ),
+                        const Text("delet"),
+                        // SizedBox(width: 10,),
+                        Checkbox(
+                          value: widget.list_bool_save_to_good[index],
+                          onChanged: (bool? value) {
+                            _toggleCheckbox_save_good_to_dataset(value, index);
+                          },
+                        ),
+                        const Text("save"),
                       ],
                     ),
-                  );
-                },
-              ),
-            ),
+                    Image.network(
+                      "http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
+                      height: 250,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        );
+        ),
+      ),
+    );
   }
 
-  Widget badrender_image(){
+  Widget badrender_image() {
     return SizedBox(
-          height: 800,
-          width: 1600,
-          child: Container(
-            child: SingleChildScrollView(
-              child: GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                ),
-                itemCount: widget.list_image_bad_pool.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    // color: Colors.blue,
-                    child: Column(
+      height: 800,
+      width: 1600,
+      child: Container(
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+            ),
+            itemCount: widget.list_image_bad_pool.length,
+            itemBuilder: (context, index) {
+              return Container(
+                // color: Colors.blue,
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(children: [
-                          SizedBox(width: 25,),
-                          Checkbox(
-                            value: widget.list_bool_move_to_good[index],
-                            onChanged: (bool? value) {
-                              _toggleCheckbox_move_to_good(value, index);
-                            },
-                          ),
-                          Text("move to good"),
-                          // SizedBox(width: 10,),
-                          Checkbox(
-                            value: widget.list_bool_del_bad[index],
-                            onChanged: (bool? value) {
-                              _toggleCheckbox_bad(value, index);
-                            },
-                          ),
-                          Text("delet"),
-                          // SizedBox(width: 10,),
-                          Checkbox(
-                            value: widget.list_bool_save_to_bad[index],
-                            onChanged: (bool? value) {
-                              _toggleCheckbox_save_bad_to_dataset(value, index);
-                            },
-                          ),
-                          Text("save"),
-                        ],),
-                        Image.network("http://210.246.215.145:1234/show/bad/${widget.list_image_bad_pool[index]}",
-                        height: 250,
+                        const SizedBox(
+                          width: 25,
                         ),
+                        Checkbox(
+                          value: widget.list_bool_move_to_good[index],
+                          onChanged: (bool? value) {
+                            _toggleCheckbox_move_to_good(value, index);
+                          },
+                        ),
+                        const Text("move to good"),
+                        // SizedBox(width: 10,),
+                        Checkbox(
+                          value: widget.list_bool_del_bad[index],
+                          onChanged: (bool? value) {
+                            _toggleCheckbox_bad(value, index);
+                          },
+                        ),
+                        const Text("delet"),
+                        // SizedBox(width: 10,),
+                        Checkbox(
+                          value: widget.list_bool_save_to_bad[index],
+                          onChanged: (bool? value) {
+                            _toggleCheckbox_save_bad_to_dataset(value, index);
+                          },
+                        ),
+                        const Text("save"),
                       ],
                     ),
-                  );
-                },
-              ),
-            ),
+                    Image.network(
+                      "http://210.246.215.145:1234/show/bad/${widget.list_image_bad_pool[index]}",
+                      height: 250,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        );
+        ),
+      ),
+    );
   }
-  
-  
-  void set_mode_display(){
+
+  void set_mode_display() {
     setState(() {
       widget.display_swich = !widget.display_swich;
     });
@@ -2912,7 +3477,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: 1300,
           height: 50,
           // color: Colors.amber,
@@ -2920,11 +3485,15 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CupertinoButton(
-                onPressed: () {setState(() {
-                  widget.display_swich = true;
-                  runGetListFromGoodPool();
-                });},
-                color: widget.display_swich ? Color.fromARGB(255, 138, 148, 209):const Color(0xFF5A67BA),
+                onPressed: () {
+                  setState(() {
+                    widget.display_swich = true;
+                    runGetListFromGoodPool();
+                  });
+                },
+                color: widget.display_swich
+                    ? const Color.fromARGB(255, 138, 148, 209)
+                    : const Color(0xFF5A67BA),
                 child: const SizedBox(
                   width: 150,
                   child: Text(
@@ -2936,11 +3505,15 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                 ),
               ),
               CupertinoButton(
-                onPressed: () {setState(() {
-                  widget.display_swich = false;
-                  runGetListFromBadPool();
-                });},
-                color: widget.display_swich?const Color(0xFF5A67BA):Color.fromARGB(255, 138, 148, 209),
+                onPressed: () {
+                  setState(() {
+                    widget.display_swich = false;
+                    runGetListFromBadPool();
+                  });
+                },
+                color: widget.display_swich
+                    ? const Color(0xFF5A67BA)
+                    : const Color.fromARGB(255, 138, 148, 209),
                 child: const SizedBox(
                   width: 150,
                   child: Text(
@@ -2981,19 +3554,17 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 50,
         ),
-        widget.display_swich?Goodrender_image():badrender_image(),
+        widget.display_swich ? Goodrender_image() : badrender_image(),
       ],
     );
   }
 }
-
 
 class DataCenter_for_train extends StatefulWidget {
   DataCenter_for_train({super.key});
@@ -3007,13 +3578,13 @@ class DataCenter_for_train extends StatefulWidget {
   List<String> list_image_bad_pool = <String>[];
   late List badPool_list;
 
-
   @override
-  State<DataCenter_for_train> createState() => _DataCenter_WidgetState_fortrain_model();
+  State<DataCenter_for_train> createState() =>
+      _DataCenter_WidgetState_fortrain_model();
 }
 
-class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train> {
-
+class _DataCenter_WidgetState_fortrain_model
+    extends State<DataCenter_for_train> {
   Future<void> runGetListFromGoodPool() async {
     final response = await http.get(
       Uri.parse(
@@ -3023,13 +3594,14 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       widget.GoodPool_list = responseData['files'];
       widget.list_image_good_pool = [];
-      for(var i in widget.GoodPool_list){
+      for (var i in widget.GoodPool_list) {
         widget.list_image_good_pool.add(i);
       }
       // print(responseData['files']);
     }
   }
-    Future<void> runGetListFromBadPool() async {
+
+  Future<void> runGetListFromBadPool() async {
     final response = await http.get(
       Uri.parse(
           'http://210.246.215.145:1234/get_name_data_set_in_bad_train'), // Replace with your backend URL
@@ -3038,21 +3610,22 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       widget.badPool_list = responseData['files'];
       widget.list_image_bad_pool = [];
-      for(var i in widget.badPool_list){
+      for (var i in widget.badPool_list) {
         widget.list_image_bad_pool.add(i);
       }
       // print(responseData['files']);
     }
   }
-    
-  Future<void> move_all_to_pool() async{
+
+  Future<void> move_all_to_pool() async {
     final response5 = await http.post(
-      Uri.parse('http://210.246.215.145:1234/move_or_delete_dataset_pool_to_train'),
+      Uri.parse(
+          'http://210.246.215.145:1234/move_or_delete_dataset_pool_to_train'),
       headers: {
-        'Content-Type': 'application/json',  // Set content type to JSON
+        'Content-Type': 'application/json', // Set content type to JSON
       },
       body: jsonEncode({
-        "mode":"train_to_pool",
+        "mode": "train_to_pool",
       }),
     );
   }
@@ -3060,19 +3633,19 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
   void runPopupLoading_move_to_pool() async {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Processing'),
+              const Text('Processing'),
               LoadingAnimationWidget.dotsTriangle(
-                color: Color.fromARGB(255, 106, 55, 248),
+                color: const Color.fromARGB(255, 106, 55, 248),
                 size: 150,
               ),
-              SizedBox(height: 20),
-              Text('Please wait...'),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
             ],
           ),
         );
@@ -3081,7 +3654,6 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
     await move_all_to_pool();
     Navigator.of(context, rootNavigator: true).pop();
   }
-
 
   @override
   void initState() {
@@ -3092,75 +3664,76 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
     // runGetListFromBadPool();
   }
 
-  Widget Goodrender_image(){
+  Widget Goodrender_image() {
     print(widget.list_image_good_pool);
     return SizedBox(
-          height: 800,
-          width: 1600,
-          child: Container(
-            child: SingleChildScrollView(
-              child: GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                ),
-                itemCount: widget.list_image_good_pool.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    // color: Colors.blue,
-                    child: Column(
-                      children: [
-                        Image.network("http://210.246.215.145:1234/show/train_good/${widget.list_image_good_pool[index]}",
-                        height: 250,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+      height: 800,
+      width: 1600,
+      child: Container(
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
             ),
+            itemCount: widget.list_image_good_pool.length,
+            itemBuilder: (context, index) {
+              return Container(
+                // color: Colors.blue,
+                child: Column(
+                  children: [
+                    Image.network(
+                      "http://210.246.215.145:1234/show/train_good/${widget.list_image_good_pool[index]}",
+                      height: 250,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        );
+        ),
+      ),
+    );
   }
 
-  Widget badrender_image(){
+  Widget badrender_image() {
     return SizedBox(
-          height: 800,
-          width: 1600,
-          child: Container(
-            child: SingleChildScrollView(
-              child: GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                ),
-                itemCount: widget.list_image_bad_pool.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    // color: Colors.blue,
-                    child: Column(
-                      children: [
-                        Image.network("http://210.246.215.145:1234/show/train_bad/${widget.list_image_bad_pool[index]}",
-                        height: 250,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+      height: 800,
+      width: 1600,
+      child: Container(
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
             ),
+            itemCount: widget.list_image_bad_pool.length,
+            itemBuilder: (context, index) {
+              return Container(
+                // color: Colors.blue,
+                child: Column(
+                  children: [
+                    Image.network(
+                      "http://210.246.215.145:1234/show/train_bad/${widget.list_image_bad_pool[index]}",
+                      height: 250,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        );
+        ),
+      ),
+    );
   }
-  
-  
-  void set_mode_display(){
+
+  void set_mode_display() {
     setState(() {
       widget.display_swich = !widget.display_swich;
     });
@@ -3170,7 +3743,7 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: 1300,
           height: 50,
           // color: Colors.amber,
@@ -3178,11 +3751,15 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CupertinoButton(
-                onPressed: () {setState(() {
-                  widget.display_swich = true;
-                  runGetListFromGoodPool();
-                });},
-                color: widget.display_swich ? Color.fromARGB(255, 138, 148, 209):const Color(0xFF5A67BA),
+                onPressed: () {
+                  setState(() {
+                    widget.display_swich = true;
+                    runGetListFromGoodPool();
+                  });
+                },
+                color: widget.display_swich
+                    ? const Color.fromARGB(255, 138, 148, 209)
+                    : const Color(0xFF5A67BA),
                 child: const SizedBox(
                   width: 150,
                   child: Text(
@@ -3194,11 +3771,15 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
                 ),
               ),
               CupertinoButton(
-                onPressed: () {setState(() {
-                  widget.display_swich = false;
-                  runGetListFromBadPool();
-                });},
-                color: widget.display_swich?const Color(0xFF5A67BA):Color.fromARGB(255, 138, 148, 209),
+                onPressed: () {
+                  setState(() {
+                    widget.display_swich = false;
+                    runGetListFromBadPool();
+                  });
+                },
+                color: widget.display_swich
+                    ? const Color(0xFF5A67BA)
+                    : const Color.fromARGB(255, 138, 148, 209),
                 child: const SizedBox(
                   width: 150,
                   child: Text(
@@ -3224,19 +3805,17 @@ class _DataCenter_WidgetState_fortrain_model extends State<DataCenter_for_train>
                   ),
                 ),
               ),
-
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 50,
         ),
-        widget.display_swich?Goodrender_image():badrender_image(),
+        widget.display_swich ? Goodrender_image() : badrender_image(),
       ],
     );
   }
 }
-
 
 _launchURL() async {
   final Uri url = Uri.parse(
@@ -3378,6 +3957,91 @@ Widget GUI_version_model(
   );
 }
 
+Widget GUI_version_model_V2(
+    String globalVersion, String globalMse, String globalPerformance) {
+  return Stack(
+    children: [
+      Container(
+        width: 350,
+        height: 350,
+        color: const Color.fromARGB(255, 255, 255, 255),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Image.asset("images/canvas.png", fit: BoxFit.fill),
+          ],
+        ),
+      ),
+      Positioned(
+        left: 100, // ระบุค่าพิกัด x
+        top: 100, // ระบุค่าพิกัด y
+        child: Text(
+          globalVersion,
+          style: const TextStyle(
+              fontSize: 25,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontFamily: 'Poppins'),
+        ),
+      ),
+      const Positioned(
+        left: 70, // ระบุค่าพิกัด x
+        top: 140, // ระบุค่าพิกัด y
+        child: Text(
+          "Model version",
+          style: TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontFamily: 'Poppins'),
+        ),
+      ),
+      Positioned(
+        left: 200, // ระบุค่าพิกัด x
+        top: 150, // ระบุค่าพิกัด y
+        child: Text(
+          globalMse,
+          style: const TextStyle(
+              fontSize: 40,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontFamily: 'Poppins'),
+        ),
+      ),
+      const Positioned(
+        left: 230, // ระบุค่าพิกัด x
+        top: 200, // ระบุค่าพิกัด y
+        child: Text(
+          "MSE",
+          style: TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontFamily: 'Poppins'),
+        ),
+      ),
+      Positioned(
+        left: 55, // ระบุค่าพิกัด x
+        top: 240, // ระบุค่าพิกัด y
+        child: Text(
+          globalPerformance,
+          style: const TextStyle(
+              fontSize: 25,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontFamily: 'Poppins'),
+        ),
+      ),
+      const Positioned(
+        left: 30, // ระบุค่าพิกัด x
+        top: 280, // ระบุค่าพิกัด y
+        child: Text(
+          "Performance",
+          style: TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontFamily: 'Poppins'),
+        ),
+      ),
+    ],
+  );
+}
+
 Widget List_command_display(List dataListCommand) {
   return Expanded(
     child: ListView.builder(
@@ -3404,3 +4068,69 @@ Widget List_command_display(List dataListCommand) {
 Map<dynamic, dynamic> data_dashdoard_histry() {
   return {};
 }
+
+class GlobalData {
+  static final GlobalData _instance = GlobalData._internal();
+  factory GlobalData() {
+    return _instance;
+  }
+  GlobalData._internal();
+
+  // ข้อมูลที่ต้องการเก็บ
+  List<Hislist> myData = [];
+
+  // เมธอดที่ใช้ในการเข้าถึงและแก้ไขข้อมูล
+  void addData(List<Hislist> data) {
+    myData = data;
+    // myData.add(data);
+    // myData.add(data);
+  }
+
+  List<Hislist> getData() {
+    return myData;
+  }
+}
+
+class GlobalData_model_for_web {
+  static final GlobalData_model_for_web _instance = GlobalData_model_for_web._internal();
+  factory GlobalData_model_for_web() {
+    return _instance;
+  }
+  GlobalData_model_for_web._internal();
+  List<Model> myData = [];
+  void addData(List<Model> data) {
+    myData = data;
+    // myData.add(data);
+    // myData.add(data);
+  }
+
+  List<Model> getData() {
+    return myData;
+  }
+}
+
+
+// class GlobalData_Version_model_kuy {
+//   static final GlobalData_Version_model_kuy _instance = GlobalData_Version_model_kuy._internal();
+//   factory GlobalData_Version_model_kuy() {
+//     return _instance;
+//   }
+//   GlobalData_Version_model_kuy._internal();
+
+//   // List<Model> myData = [];
+//   String global_version = "";
+//   String global_mse = "";
+//   String global_performance = "";
+
+//   void setdata_global_version(String d1,String d2,String d3) {
+//     // myData = data;
+//     global_version = d1;
+//     global_mse = d2;
+//     global_performance = d3;
+//   }
+
+//   List<String> getData() {
+//     return [global_version,global_mse,global_performance];
+//   }
+// }
+
