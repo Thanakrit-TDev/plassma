@@ -1309,130 +1309,130 @@ class Dashboard_Widget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Notification",
-                      style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                    ),
-                    const Text(
-                      "3",
-                      style: TextStyle(fontSize: 15, fontFamily: 'Poppins'),
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.arrow_downward,
-                                size: 15,
-                                color: Colors.red,
-                              ),
-                              Text(
-                                "2.1%",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              Text(
-                                " vs last week",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: 'Poppins',
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontWeight: FontWeight.w100),
-                              ),
-                            ],
-                          ),
-                          ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("View Report")),
-                        ],
-                      ),
-                    ),
-                    const Text(
-                      "Detect from 1-6 Jan, 2024",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: 'Poppins',
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontWeight: FontWeight.w100),
-                    ),
-                    // grap--------------
-                    SizedBox(
-                      height: 250, // cari++++++++
-                      child: SfCartesianChart(
-                          primaryXAxis: const CategoryAxis(),
-                          primaryYAxis: const NumericAxis(
-                              minimum: 0, maximum: 100, interval: 25),
-                          series: <CartesianSeries<ChartData, String>>[
-                            LineSeries<ChartData, String>(
-                              dataSource: [
-                                // Bind data source
-                                ChartData('01', 35),
-                                ChartData('02', 28),
-                                ChartData('03', 34),
-                                ChartData('04', 32),
-                                ChartData('05', 40),
-                                ChartData('06', 35),
-                                ChartData('07', 28),
-                                ChartData('08', 34),
-                                ChartData('09', 32),
-                                ChartData('10', 40),
-                                ChartData('11', 32),
-                                ChartData('12', 40),
-                              ],
-                              xValueMapper: (ChartData data, _) => data.x,
-                              yValueMapper: (ChartData data, _) => data.y,
-                              name: 'Series 1',
-                              color: const Color(0xFF5A6ACF),
-                            ),
-                            LineSeries<ChartData, String>(
-                              dataSource: [
-                                // Bind data source
-                                ChartData('01', 5),
-                                ChartData('02', 56),
-                                ChartData('03', 70),
-                                ChartData('04', 88),
-                                ChartData('05', 75),
-                                ChartData('06', 5),
-                                ChartData('07', 28),
-                                ChartData('08', 34),
-                                ChartData('09', 8),
-                                ChartData('10', 89),
-                                ChartData('11', 56),
-                                ChartData('12', 69),
-                              ],
-                              xValueMapper: (ChartData data, _) => data.x,
-                              yValueMapper: (ChartData data, _) => data.y,
-                              name: 'Series 1',
-                              color: const Color(0xFFF2383A),
-                            ),
-                          ]),
-                    ),
-                    Container(
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.circle,
-                            color: Color(0xFF5A6ACF),
-                            size: 20,
-                          ),
-                          Text(" Today"),
-                          SizedBox(
-                            width: 50,
-                          ),
-                          Icon(
-                            Icons.circle,
-                            color: Color(0xFFF2383A),
-                            size: 20,
-                          ),
-                          Text(" Yesterday"),
-                        ],
-                      ),
-                    ),
+                    // const Text(
+                    //   "Notification",
+                    //   style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                    // ),
+                    // const Text(
+                    //   "3",
+                    //   style: TextStyle(fontSize: 15, fontFamily: 'Poppins'),
+                    // ),
+                    // Container(
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       const Row(
+                    //         children: [
+                    //           Icon(
+                    //             Icons.arrow_downward,
+                    //             size: 15,
+                    //             color: Colors.red,
+                    //           ),
+                    //           Text(
+                    //             "2.1%",
+                    //             style: TextStyle(
+                    //                 fontSize: 15,
+                    //                 fontFamily: 'Poppins',
+                    //                 color: Colors.red,
+                    //                 fontWeight: FontWeight.w700),
+                    //           ),
+                    //           Text(
+                    //             " vs last week",
+                    //             style: TextStyle(
+                    //                 fontSize: 15,
+                    //                 fontFamily: 'Poppins',
+                    //                 color: Color.fromARGB(255, 0, 0, 0),
+                    //                 fontWeight: FontWeight.w100),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       ElevatedButton(
+                    //           onPressed: () {},
+                    //           child: const Text("View Report")),
+                    //     ],
+                    //   ),
+                    // ),
+                    // const Text(
+                    //   "Detect from 1-6 Jan, 2024",
+                    //   style: TextStyle(
+                    //       fontSize: 15,
+                    //       fontFamily: 'Poppins',
+                    //       color: Color.fromARGB(255, 0, 0, 0),
+                    //       fontWeight: FontWeight.w100),
+                    // ),
+                    // // grap--------------
+                    // SizedBox(
+                    //   height: 250, // cari++++++++
+                    //   child: SfCartesianChart(
+                    //       primaryXAxis: const CategoryAxis(),
+                    //       primaryYAxis: const NumericAxis(
+                    //           minimum: 0, maximum: 100, interval: 25),
+                    //       series: <CartesianSeries<ChartData, String>>[
+                    //         LineSeries<ChartData, String>(
+                    //           dataSource: [
+                    //             // Bind data source
+                    //             ChartData('01', 35),
+                    //             ChartData('02', 28),
+                    //             ChartData('03', 34),
+                    //             ChartData('04', 32),
+                    //             ChartData('05', 40),
+                    //             ChartData('06', 35),
+                    //             ChartData('07', 28),
+                    //             ChartData('08', 34),
+                    //             ChartData('09', 32),
+                    //             ChartData('10', 40),
+                    //             ChartData('11', 32),
+                    //             ChartData('12', 40),
+                    //           ],
+                    //           xValueMapper: (ChartData data, _) => data.x,
+                    //           yValueMapper: (ChartData data, _) => data.y,
+                    //           name: 'Series 1',
+                    //           color: const Color(0xFF5A6ACF),
+                    //         ),
+                    //         LineSeries<ChartData, String>(
+                    //           dataSource: [
+                    //             // Bind data source
+                    //             ChartData('01', 5),
+                    //             ChartData('02', 56),
+                    //             ChartData('03', 70),
+                    //             ChartData('04', 88),
+                    //             ChartData('05', 75),
+                    //             ChartData('06', 5),
+                    //             ChartData('07', 28),
+                    //             ChartData('08', 34),
+                    //             ChartData('09', 8),
+                    //             ChartData('10', 89),
+                    //             ChartData('11', 56),
+                    //             ChartData('12', 69),
+                    //           ],
+                    //           xValueMapper: (ChartData data, _) => data.x,
+                    //           yValueMapper: (ChartData data, _) => data.y,
+                    //           name: 'Series 1',
+                    //           color: const Color(0xFFF2383A),
+                    //         ),
+                    //       ]),
+                    // ),
+                    // Container(
+                    //   child: const Row(
+                    //     children: [
+                    //       Icon(
+                    //         Icons.circle,
+                    //         color: Color(0xFF5A6ACF),
+                    //         size: 20,
+                    //       ),
+                    //       Text(" Today"),
+                    //       SizedBox(
+                    //         width: 50,
+                    //       ),
+                    //       Icon(
+                    //         Icons.circle,
+                    //         color: Color(0xFFF2383A),
+                    //         size: 20,
+                    //       ),
+                    //       Text(" Yesterday"),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

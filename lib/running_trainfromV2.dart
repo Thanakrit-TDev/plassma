@@ -2438,11 +2438,45 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       // print("modelllllll");
     }
   
+  bool _updating = false;
+  List<dynamic> data_load_log = [];
+  void load_status_get_log() async{
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:5000/get_log'), // Replace with your backend URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      data_load_log = responseData;
+      int count = 0;
+      for(var i in data_load_log){
+        if(i[1] == "True"){
+          data_load_log[count].add(true);
+        }else{
+          data_load_log[count].add(false);
+        }
+        count++;
+      }
+      setState(() {
+        print(data_load_log);
+      });
+      // print(responseData);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     use_now_setting();
+
+    Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
+      if (!_updating) {
+        load_status_get_log();
+      }
+    });
 
     // List<String> dataVersion = GlobalData_Version_model.getData();
 
@@ -2876,7 +2910,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                     Container(
                       width: 400,
                       height: 450,
-                      color: const Color.fromARGB(255, 255, 255, 255),
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      // child: render_log_load(data_load_log),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -2885,129 +2920,148 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                             style:
                                 TextStyle(fontSize: 20, fontFamily: 'Poppins'),
                           ),
-                          const Text(
-                            "3",
-                            style:
-                                TextStyle(fontSize: 15, fontFamily: 'Poppins'),
-                          ),
+                          SizedBox(height: 20,),
                           Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.arrow_downward,
-                                      size: 15,
-                                      color: Colors.red,
-                                    ),
-                                    Text(
-                                      "2.1%",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: 'Poppins',
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    Text(
-                                      " vs last week",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: 'Poppins',
-                                          color: Color.fromARGB(255, 0, 0, 0),
-                                          fontWeight: FontWeight.w100),
-                                    ),
-                                  ],
-                                ),
-                                ElevatedButton(
-                                    onPressed: () {},
-                                    child: const Text("View Report")),
-                              ],
-                            ),
-                          ),
-                          const Text(
-                            "Detect from 1-6 Jan, 2024",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontWeight: FontWeight.w100),
-                          ),
-                          // grap--------------
-                          SizedBox(
-                            height: 250, // cari++++++++
-                            child: SfCartesianChart(
-                                primaryXAxis: const CategoryAxis(),
-                                primaryYAxis: const NumericAxis(
-                                    minimum: 0, maximum: 100, interval: 25),
-                                series: <CartesianSeries<ChartData, String>>[
-                                  LineSeries<ChartData, String>(
-                                    dataSource: [
-                                      // Bind data source
-                                      ChartData('01', 35),
-                                      ChartData('02', 28),
-                                      ChartData('03', 34),
-                                      ChartData('04', 32),
-                                      ChartData('05', 40),
-                                      ChartData('06', 35),
-                                      ChartData('07', 28),
-                                      ChartData('08', 34),
-                                      ChartData('09', 32),
-                                      ChartData('10', 40),
-                                      ChartData('11', 32),
-                                      ChartData('12', 40),
-                                    ],
-                                    xValueMapper: (ChartData data, _) => data.x,
-                                    yValueMapper: (ChartData data, _) => data.y,
-                                    name: 'Series 1',
-                                    color: const Color(0xFF5A6ACF),
-                                  ),
-                                  LineSeries<ChartData, String>(
-                                    dataSource: [
-                                      // Bind data source
-                                      ChartData('01', 5),
-                                      ChartData('02', 56),
-                                      ChartData('03', 70),
-                                      ChartData('04', 88),
-                                      ChartData('05', 75),
-                                      ChartData('06', 5),
-                                      ChartData('07', 28),
-                                      ChartData('08', 34),
-                                      ChartData('09', 8),
-                                      ChartData('10', 89),
-                                      ChartData('11', 56),
-                                      ChartData('12', 69),
-                                    ],
-                                    xValueMapper: (ChartData data, _) => data.x,
-                                    yValueMapper: (ChartData data, _) => data.y,
-                                    name: 'Series 1',
-                                    color: const Color(0xFFF2383A),
-                                  ),
-                                ]),
-                          ),
-                          Container(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: Color(0xFF5A6ACF),
-                                  size: 20,
-                                ),
-                                Text(" Today"),
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Icon(
-                                  Icons.circle,
-                                  color: Color(0xFFF2383A),
-                                  size: 20,
-                                ),
-                                Text(" Yesterday"),
-                              ],
-                            ),
-                          ),
-                        ],
+                            width: 400,
+                            height: 400,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            child: render_log_load(data_load_log),
+                          )
+                        ]
                       ),
+                      // child: Column(
+                        // crossAxisAlignment: CrossAxisAlignment.start,
+
+                        // children: [
+
+                          // const Text(
+                          //   "Notification",
+                          //   style:
+                          //       TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                          // ),
+                          // const Text(
+                          //   "3",
+                          //   style:
+                          //       TextStyle(fontSize: 15, fontFamily: 'Poppins'),
+                          // ),
+                          // Container(
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       const Row(
+                          //         children: [
+                          //           Icon(
+                          //             Icons.arrow_downward,
+                          //             size: 15,
+                          //             color: Colors.red,
+                          //           ),
+                          //           Text(
+                          //             "2.1%",
+                          //             style: TextStyle(
+                          //                 fontSize: 15,
+                          //                 fontFamily: 'Poppins',
+                          //                 color: Colors.red,
+                          //                 fontWeight: FontWeight.w700),
+                          //           ),
+                          //           Text(
+                          //             " vs last week",
+                          //             style: TextStyle(
+                          //                 fontSize: 15,
+                          //                 fontFamily: 'Poppins',
+                          //                 color: Color.fromARGB(255, 0, 0, 0),
+                          //                 fontWeight: FontWeight.w100),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       ElevatedButton(
+                          //           onPressed: () {},
+                          //           child: const Text("View Report")),
+                          //     ],
+                          //   ),
+                          // ),
+                          // const Text(
+                          //   "Detect from 1-6 Jan, 2024",
+                          //   style: TextStyle(
+                          //       fontSize: 15,
+                          //       fontFamily: 'Poppins',
+                          //       color: Color.fromARGB(255, 0, 0, 0),
+                          //       fontWeight: FontWeight.w100),
+                          // ),
+                          // // grap--------------
+                          // SizedBox(
+                          //   height: 250, // cari++++++++
+                          //   child: SfCartesianChart(
+                          //       primaryXAxis: const CategoryAxis(),
+                          //       primaryYAxis: const NumericAxis(
+                          //           minimum: 0, maximum: 100, interval: 25),
+                          //       series: <CartesianSeries<ChartData, String>>[
+                          //         LineSeries<ChartData, String>(
+                          //           dataSource: [
+                          //             // Bind data source
+                          //             ChartData('01', 35),
+                          //             ChartData('02', 28),
+                          //             ChartData('03', 34),
+                          //             ChartData('04', 32),
+                          //             ChartData('05', 40),
+                          //             ChartData('06', 35),
+                          //             ChartData('07', 28),
+                          //             ChartData('08', 34),
+                          //             ChartData('09', 32),
+                          //             ChartData('10', 40),
+                          //             ChartData('11', 32),
+                          //             ChartData('12', 40),
+                          //           ],
+                          //           xValueMapper: (ChartData data, _) => data.x,
+                          //           yValueMapper: (ChartData data, _) => data.y,
+                          //           name: 'Series 1',
+                          //           color: const Color(0xFF5A6ACF),
+                          //         ),
+                          //         LineSeries<ChartData, String>(
+                          //           dataSource: [
+                          //             // Bind data source
+                          //             ChartData('01', 5),
+                          //             ChartData('02', 56),
+                          //             ChartData('03', 70),
+                          //             ChartData('04', 88),
+                          //             ChartData('05', 75),
+                          //             ChartData('06', 5),
+                          //             ChartData('07', 28),
+                          //             ChartData('08', 34),
+                          //             ChartData('09', 8),
+                          //             ChartData('10', 89),
+                          //             ChartData('11', 56),
+                          //             ChartData('12', 69),
+                          //           ],
+                          //           xValueMapper: (ChartData data, _) => data.x,
+                          //           yValueMapper: (ChartData data, _) => data.y,
+                          //           name: 'Series 1',
+                          //           color: const Color(0xFFF2383A),
+                          //         ),
+                          //       ]),
+                          // ),
+                          // Container(
+                          //   child: const Row(
+                          //     children: [
+                          //       Icon(
+                          //         Icons.circle,
+                          //         color: Color(0xFF5A6ACF),
+                          //         size: 20,
+                          //       ),
+                          //       Text(" Today"),
+                          //       SizedBox(
+                          //         width: 50,
+                          //       ),
+                          //       Icon(
+                          //         Icons.circle,
+                          //         color: Color(0xFFF2383A),
+                          //         size: 20,
+                          //       ),
+                          //       Text(" Yesterday"),
+                          //     ],
+                          //   ),
+                          // ),
+                        // ],
+                      // ),
                     ),
                   ],
                 ),
@@ -4110,27 +4164,34 @@ class GlobalData_model_for_web {
 }
 
 
-// class GlobalData_Version_model_kuy {
-//   static final GlobalData_Version_model_kuy _instance = GlobalData_Version_model_kuy._internal();
-//   factory GlobalData_Version_model_kuy() {
-//     return _instance;
-//   }
-//   GlobalData_Version_model_kuy._internal();
-
-//   // List<Model> myData = [];
-//   String global_version = "";
-//   String global_mse = "";
-//   String global_performance = "";
-
-//   void setdata_global_version(String d1,String d2,String d3) {
-//     // myData = data;
-//     global_version = d1;
-//     global_mse = d2;
-//     global_performance = d3;
-//   }
-
-//   List<String> getData() {
-//     return [global_version,global_mse,global_performance];
-//   }
-// }
+Widget render_log_load(List<dynamic> data){
+  return ListView.builder(
+          itemCount: data
+              .length, // replace `models` with your data source
+          itemBuilder: (context, index) {
+            return ListTile(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(data[index][0]),
+                    const SizedBox(
+                      width: 100,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Detect status:${data[index][1]}"),
+                        SizedBox(width: 20,),
+                        data[index][3]?Icon(Icons.circle,size: 20,color: Colors.green,):Icon(Icons.circle,size: 20,color: Colors.red,)
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                  ],
+                ),
+                subtitle: const Divider(color: Colors.black));
+          },
+        );
+}
 
