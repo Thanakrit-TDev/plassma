@@ -4165,7 +4165,7 @@ List<String> _nameSlider = [
 List<double> _max = [179,179,255,255,255,255,100,100,10,1000];
 List<double> _min = [1,1,1,1,1,1,1,1,1,1];
 List<int> _divisions = [179,179,255,255,255,255,100,100,10,1000];
-
+//1
 Widget Setting_mask() {
   return Expanded(
     child: ListView.builder(
@@ -4188,7 +4188,7 @@ Widget Setting_mask() {
               divisions: _divisions[index],
               onChanged: (double value) {
                 _currentSliderSecondaryValue[index] = value;
-                
+
               },
             ),
           ],
