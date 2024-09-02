@@ -213,18 +213,15 @@ class Running_Widget extends StatefulWidget {
   String global_performance = "99";
 
   //disboard var
-
   bool st_swich_graph = false;
+
+  bool st_mask_and_command = true;
 
   @override
   State<Running_Widget> createState() => _Running_WidgetState();
 }
 
 class _Running_WidgetState extends State<Running_Widget> {
-  // map keep histry------------
-
-  // map keep histry------------
-
   // setting tube ------------------------------------------------------------------
   final tube_hight = TextEditingController();
   final tube_diameter = TextEditingController();
@@ -817,7 +814,7 @@ class _Running_WidgetState extends State<Running_Widget> {
 
   // get image zone ---------------------------------------------------------------------
   String imageUrl = "http://127.0.0.1:2545/vdo";
-  // String imageUrl_qr = "http://127.0.0.1:5000/image_qr";
+  String imageUrl_mask = "http://127.0.0.1:2545/mask";
   bool _updating = false;
 
   // GlobalData_Version_model().setdata_GlobalVersion(widget.global_version, widget.global_mse, widget.global_performance);
@@ -859,15 +856,20 @@ class _Running_WidgetState extends State<Running_Widget> {
       await precacheImage(NetworkImage(newImageUrl), context);
     }
 
-    // print(newImageUrl);
-
-    // String newimageurlQr = "http://127.0.0.1:5000/image_qr?t=${DateTime.now().millisecondsSinceEpoch}";
-    // await precacheImage(NetworkImage(newimageurlQr), context);
+    String MaskImageUrl =
+        "http://127.0.0.1:2545/mask?t=${DateTime.now().millisecondsSinceEpoch}";
+    if (st_on_off_camera) {
+      //chack status get image
+      String MaskImageUrl =
+          "http://127.0.0.1:2545/mask?t=${DateTime.now().millisecondsSinceEpoch}";
+      await precacheImage(NetworkImage(MaskImageUrl), context);
+    }
 
     if (!mounted) return;
     setState(() {
       if (st_on_off_camera) {
         imageUrl = newImageUrl;
+        imageUrl_mask = MaskImageUrl;
       }
       // print(imageUrl);
       // imageUrl_qr = newimageurlQr;
@@ -1212,6 +1214,11 @@ class _Running_WidgetState extends State<Running_Widget> {
     int windowsHight = ((MediaQuery.of(context).size).height).toInt();
     // print("windows_hight $windowsHight");
 
+    //swich command and mask
+    void Changed_mask_and_command() {
+      widget.st_mask_and_command = !widget.st_mask_and_command;
+    }
+
     return Transform.scale(
       alignment: Alignment.topLeft,
       scale: (windowsHight / 1000),
@@ -1266,14 +1273,16 @@ class _Running_WidgetState extends State<Running_Widget> {
                       width: 400,
                       height: 400,
                       color: const Color.fromARGB(255, 211, 211, 211),
-                      child: const Column(
+                      child: Column(
                         children: [
-                          // Image.network(
-                          //   imageUrl_qr,
-                          //   width: 400,
-                          //   height: 400,
-                          //   fit: BoxFit.cover,
-                          // ),
+                          st_on_off_camera
+                              ? Image.network(
+                                  imageUrl_mask,
+                                  width: 400,
+                                  height: 400,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset("images/cat.gif", fit: BoxFit.cover)
                         ],
                       ),
                     )
@@ -1287,10 +1296,15 @@ class _Running_WidgetState extends State<Running_Widget> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text(
-                      "Command",
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    widget.st_mask_and_command
+                        ? Text(
+                            "Command",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        : Text(
+                            "Mask",
+                            style: TextStyle(fontSize: 20),
+                          ),
                     Container(
                       width: 400,
                       height: 400,
@@ -1302,7 +1316,9 @@ class _Running_WidgetState extends State<Running_Widget> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          List_command_display(data_list_command),
+                          widget.st_mask_and_command
+                              ? List_command_display(data_list_command)
+                              : Setting_mask(),
                           SizedBox(
                             height: 40,
                             width: 400,
@@ -1320,7 +1336,13 @@ class _Running_WidgetState extends State<Running_Widget> {
                                     onPressed: send_command,
                                     child: const Text("send")),
                                 const SizedBox(
-                                  width: 20,
+                                  width: 10,
+                                ),
+                                ElevatedButton(
+                                    onPressed: Changed_mask_and_command,
+                                    child: const Text("mask")),
+                                const SizedBox(
+                                  width: 10,
                                 )
                               ],
                             ),
@@ -1807,11 +1829,12 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
         vInDatatemset = value;
       },
     );
-    
+
     setState(() {
       tube_name_setting.text = datatemset[kInDatatemset]['name'].toString();
       tube_hight.text = datatemset[kInDatatemset]['tube_hight'].toString();
-      tube_diameter.text = datatemset[kInDatatemset]['tube_diameter'].toString();
+      tube_diameter.text =
+          datatemset[kInDatatemset]['tube_diameter'].toString();
       tube_px.text = datatemset[kInDatatemset]['px'].toString();
       tube_mm.text = datatemset[kInDatatemset]['mm'].toString();
     });
@@ -2085,7 +2108,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                 width: 20,
               ),
               ElevatedButton(
-                  onPressed: Popup_run_sync_data_setting, child: const Text("sync")),
+                  onPressed: Popup_run_sync_data_setting,
+                  child: const Text("sync")),
               const SizedBox(
                 width: 20,
               ),
@@ -2169,9 +2193,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       },
     );
   }
-
-  
-
 
   // @override
   // final List<Model> modelsV2 = List.generate(
@@ -2419,43 +2440,42 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
     }
   }
 
-
   List<Model> models_from_server = GlobalData_model_for_web().getData();
 
   void apply_show_version_model(String chooseModelVersion) {
-      for (var run_version in models_from_server) {
-        if (chooseModelVersion == run_version.version) {
-          setState(() {
-            widget.global_version = run_version.version;
-            widget.global_mse = run_version.mse;
-            widget.global_performance = run_version.performance;
-            GUI_version_model_V2(widget.global_version, widget.global_mse,
-                widget.global_performance);
-          });
-          break;
-        }
+    for (var run_version in models_from_server) {
+      if (chooseModelVersion == run_version.version) {
+        setState(() {
+          widget.global_version = run_version.version;
+          widget.global_mse = run_version.mse;
+          widget.global_performance = run_version.performance;
+          GUI_version_model_V2(widget.global_version, widget.global_mse,
+              widget.global_performance);
+        });
+        break;
       }
-      // print("modelllllll");
     }
-  
+    // print("modelllllll");
+  }
+
   bool _updating = false;
   List<dynamic> data_load_log = [];
-  void load_status_get_log() async{
+  void load_status_get_log() async {
     final response = await http.get(
-        Uri.parse(
-            'http://127.0.0.1:5000/get_log'), // Replace with your backend URL
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+      Uri.parse(
+          'http://127.0.0.1:5000/get_log'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
     );
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
       data_load_log = responseData;
       int count = 0;
-      for(var i in data_load_log){
-        if(i[1] == "True"){
+      for (var i in data_load_log) {
+        if (i[1] == "True") {
           data_load_log[count].add(true);
-        }else{
+        } else {
           data_load_log[count].add(false);
         }
         count++;
@@ -2479,7 +2499,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
     });
 
     // List<String> dataVersion = GlobalData_Version_model.getData();
-
   }
 
   @override
@@ -2658,7 +2677,10 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                   height: 450,
                                   color:
                                       const Color.fromARGB(255, 255, 255, 255),
-                                  child: GUI_version_model_V2(widget.global_version,widget.global_mse, widget.global_performance),
+                                  child: GUI_version_model_V2(
+                                      widget.global_version,
+                                      widget.global_mse,
+                                      widget.global_performance),
                                 ),
                               ],
                             ),
@@ -2709,7 +2731,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                               const SizedBox(
                                                 width: 30,
                                               ),
-                                              Text(models_from_server[index].version),
+                                              Text(models_from_server[index]
+                                                  .version),
                                               const SizedBox(
                                                 width: 100,
                                               ),
@@ -2719,7 +2742,12 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                                 width: 30,
                                               ),
                                               IconButton(
-                                                  onPressed: () {apply_show_version_model(models_from_server[index].version);},
+                                                  onPressed: () {
+                                                    apply_show_version_model(
+                                                        models_from_server[
+                                                                index]
+                                                            .version);
+                                                  },
                                                   icon: const Icon(
                                                       Icons.arrow_forward_ios))
                                             ],
@@ -2789,7 +2817,9 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                                 TextButton(
                                                     onPressed: () {
                                                       setState(() {
-                                                        tube_name_setting.text =name_setting_now.text;
+                                                        tube_name_setting.text =
+                                                            name_setting_now
+                                                                .text;
                                                       });
                                                     },
                                                     child: const Text(
@@ -2913,154 +2943,155 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                       color: Color.fromARGB(255, 255, 255, 255),
                       // child: render_log_load(data_load_log),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Notification",
-                            style:
-                                TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                          ),
-                          SizedBox(height: 20,),
-                          Container(
-                            width: 400,
-                            height: 400,
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            child: render_log_load(data_load_log),
-                          )
-                        ]
-                      ),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Notification",
+                              style: TextStyle(
+                                  fontSize: 20, fontFamily: 'Poppins'),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              width: 400,
+                              height: 400,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              child: render_log_load(data_load_log),
+                            )
+                          ]),
                       // child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
 
-                        // children: [
+                      // children: [
 
-                          // const Text(
-                          //   "Notification",
-                          //   style:
-                          //       TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                          // ),
-                          // const Text(
-                          //   "3",
-                          //   style:
-                          //       TextStyle(fontSize: 15, fontFamily: 'Poppins'),
-                          // ),
-                          // Container(
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       const Row(
-                          //         children: [
-                          //           Icon(
-                          //             Icons.arrow_downward,
-                          //             size: 15,
-                          //             color: Colors.red,
-                          //           ),
-                          //           Text(
-                          //             "2.1%",
-                          //             style: TextStyle(
-                          //                 fontSize: 15,
-                          //                 fontFamily: 'Poppins',
-                          //                 color: Colors.red,
-                          //                 fontWeight: FontWeight.w700),
-                          //           ),
-                          //           Text(
-                          //             " vs last week",
-                          //             style: TextStyle(
-                          //                 fontSize: 15,
-                          //                 fontFamily: 'Poppins',
-                          //                 color: Color.fromARGB(255, 0, 0, 0),
-                          //                 fontWeight: FontWeight.w100),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       ElevatedButton(
-                          //           onPressed: () {},
-                          //           child: const Text("View Report")),
-                          //     ],
-                          //   ),
-                          // ),
-                          // const Text(
-                          //   "Detect from 1-6 Jan, 2024",
-                          //   style: TextStyle(
-                          //       fontSize: 15,
-                          //       fontFamily: 'Poppins',
-                          //       color: Color.fromARGB(255, 0, 0, 0),
-                          //       fontWeight: FontWeight.w100),
-                          // ),
-                          // // grap--------------
-                          // SizedBox(
-                          //   height: 250, // cari++++++++
-                          //   child: SfCartesianChart(
-                          //       primaryXAxis: const CategoryAxis(),
-                          //       primaryYAxis: const NumericAxis(
-                          //           minimum: 0, maximum: 100, interval: 25),
-                          //       series: <CartesianSeries<ChartData, String>>[
-                          //         LineSeries<ChartData, String>(
-                          //           dataSource: [
-                          //             // Bind data source
-                          //             ChartData('01', 35),
-                          //             ChartData('02', 28),
-                          //             ChartData('03', 34),
-                          //             ChartData('04', 32),
-                          //             ChartData('05', 40),
-                          //             ChartData('06', 35),
-                          //             ChartData('07', 28),
-                          //             ChartData('08', 34),
-                          //             ChartData('09', 32),
-                          //             ChartData('10', 40),
-                          //             ChartData('11', 32),
-                          //             ChartData('12', 40),
-                          //           ],
-                          //           xValueMapper: (ChartData data, _) => data.x,
-                          //           yValueMapper: (ChartData data, _) => data.y,
-                          //           name: 'Series 1',
-                          //           color: const Color(0xFF5A6ACF),
-                          //         ),
-                          //         LineSeries<ChartData, String>(
-                          //           dataSource: [
-                          //             // Bind data source
-                          //             ChartData('01', 5),
-                          //             ChartData('02', 56),
-                          //             ChartData('03', 70),
-                          //             ChartData('04', 88),
-                          //             ChartData('05', 75),
-                          //             ChartData('06', 5),
-                          //             ChartData('07', 28),
-                          //             ChartData('08', 34),
-                          //             ChartData('09', 8),
-                          //             ChartData('10', 89),
-                          //             ChartData('11', 56),
-                          //             ChartData('12', 69),
-                          //           ],
-                          //           xValueMapper: (ChartData data, _) => data.x,
-                          //           yValueMapper: (ChartData data, _) => data.y,
-                          //           name: 'Series 1',
-                          //           color: const Color(0xFFF2383A),
-                          //         ),
-                          //       ]),
-                          // ),
-                          // Container(
-                          //   child: const Row(
-                          //     children: [
-                          //       Icon(
-                          //         Icons.circle,
-                          //         color: Color(0xFF5A6ACF),
-                          //         size: 20,
-                          //       ),
-                          //       Text(" Today"),
-                          //       SizedBox(
-                          //         width: 50,
-                          //       ),
-                          //       Icon(
-                          //         Icons.circle,
-                          //         color: Color(0xFFF2383A),
-                          //         size: 20,
-                          //       ),
-                          //       Text(" Yesterday"),
-                          //     ],
-                          //   ),
-                          // ),
-                        // ],
+                      // const Text(
+                      //   "Notification",
+                      //   style:
+                      //       TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      // ),
+                      // const Text(
+                      //   "3",
+                      //   style:
+                      //       TextStyle(fontSize: 15, fontFamily: 'Poppins'),
+                      // ),
+                      // Container(
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                      //       const Row(
+                      //         children: [
+                      //           Icon(
+                      //             Icons.arrow_downward,
+                      //             size: 15,
+                      //             color: Colors.red,
+                      //           ),
+                      //           Text(
+                      //             "2.1%",
+                      //             style: TextStyle(
+                      //                 fontSize: 15,
+                      //                 fontFamily: 'Poppins',
+                      //                 color: Colors.red,
+                      //                 fontWeight: FontWeight.w700),
+                      //           ),
+                      //           Text(
+                      //             " vs last week",
+                      //             style: TextStyle(
+                      //                 fontSize: 15,
+                      //                 fontFamily: 'Poppins',
+                      //                 color: Color.fromARGB(255, 0, 0, 0),
+                      //                 fontWeight: FontWeight.w100),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       ElevatedButton(
+                      //           onPressed: () {},
+                      //           child: const Text("View Report")),
+                      //     ],
+                      //   ),
+                      // ),
+                      // const Text(
+                      //   "Detect from 1-6 Jan, 2024",
+                      //   style: TextStyle(
+                      //       fontSize: 15,
+                      //       fontFamily: 'Poppins',
+                      //       color: Color.fromARGB(255, 0, 0, 0),
+                      //       fontWeight: FontWeight.w100),
+                      // ),
+                      // // grap--------------
+                      // SizedBox(
+                      //   height: 250, // cari++++++++
+                      //   child: SfCartesianChart(
+                      //       primaryXAxis: const CategoryAxis(),
+                      //       primaryYAxis: const NumericAxis(
+                      //           minimum: 0, maximum: 100, interval: 25),
+                      //       series: <CartesianSeries<ChartData, String>>[
+                      //         LineSeries<ChartData, String>(
+                      //           dataSource: [
+                      //             // Bind data source
+                      //             ChartData('01', 35),
+                      //             ChartData('02', 28),
+                      //             ChartData('03', 34),
+                      //             ChartData('04', 32),
+                      //             ChartData('05', 40),
+                      //             ChartData('06', 35),
+                      //             ChartData('07', 28),
+                      //             ChartData('08', 34),
+                      //             ChartData('09', 32),
+                      //             ChartData('10', 40),
+                      //             ChartData('11', 32),
+                      //             ChartData('12', 40),
+                      //           ],
+                      //           xValueMapper: (ChartData data, _) => data.x,
+                      //           yValueMapper: (ChartData data, _) => data.y,
+                      //           name: 'Series 1',
+                      //           color: const Color(0xFF5A6ACF),
+                      //         ),
+                      //         LineSeries<ChartData, String>(
+                      //           dataSource: [
+                      //             // Bind data source
+                      //             ChartData('01', 5),
+                      //             ChartData('02', 56),
+                      //             ChartData('03', 70),
+                      //             ChartData('04', 88),
+                      //             ChartData('05', 75),
+                      //             ChartData('06', 5),
+                      //             ChartData('07', 28),
+                      //             ChartData('08', 34),
+                      //             ChartData('09', 8),
+                      //             ChartData('10', 89),
+                      //             ChartData('11', 56),
+                      //             ChartData('12', 69),
+                      //           ],
+                      //           xValueMapper: (ChartData data, _) => data.x,
+                      //           yValueMapper: (ChartData data, _) => data.y,
+                      //           name: 'Series 1',
+                      //           color: const Color(0xFFF2383A),
+                      //         ),
+                      //       ]),
+                      // ),
+                      // Container(
+                      //   child: const Row(
+                      //     children: [
+                      //       Icon(
+                      //         Icons.circle,
+                      //         color: Color(0xFF5A6ACF),
+                      //         size: 20,
+                      //       ),
+                      //       Text(" Today"),
+                      //       SizedBox(
+                      //         width: 50,
+                      //       ),
+                      //       Icon(
+                      //         Icons.circle,
+                      //         color: Color(0xFFF2383A),
+                      //         size: 20,
+                      //       ),
+                      //       Text(" Yesterday"),
+                      //     ],
+                      //   ),
+                      // ),
+                      // ],
                       // ),
                     ),
                   ],
@@ -3242,8 +3273,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
 
     for (int i = 0; i < widget.list_image_good_pool.length; i++) {
       if (widget.list_bool_save_to_good[i] == true) {
-        bufListBoolSaveToGoodNameFile
-            .add(widget.list_image_good_pool[i]);
+        bufListBoolSaveToGoodNameFile.add(widget.list_image_good_pool[i]);
       }
       if (widget.list_bool_move_to_bad[i] == true) {
         bufListBoolMoveToBadNameFile.add(widget.list_image_good_pool[i]);
@@ -4119,6 +4149,55 @@ Widget List_command_display(List dataListCommand) {
   );
 }
 
+List<double> _currentSliderSecondaryValue = [20, 30, 100, 255, 100, 255, 50, 50, 1, 50];
+List<String> _nameSlider = [
+  "Hue Min",
+  "Hue Max",
+  "Sat Min",
+  "Sat Max",
+  "Val Min",
+  "Val MAX",
+  "Brightness",
+  "Contrast",
+  "Saturation",
+  "Range"
+];
+List<double> _max = [179,179,255,255,255,255,100,100,10,1000];
+List<double> _min = [1,1,1,1,1,1,1,1,1,1];
+List<int> _divisions = [179,179,255,255,255,255,100,100,10,1000];
+
+Widget Setting_mask() {
+  return Expanded(
+    child: ListView.builder(
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              SizedBox(width: 50,),
+              Text(
+              _nameSlider[index]
+              ),
+            ],),
+            Slider(
+              value: _currentSliderSecondaryValue[index],
+              label: _currentSliderSecondaryValue[index].round().toString(),
+              max: _max[index],
+              min: _min[index],
+              divisions: _divisions[index],
+              onChanged: (double value) {
+                _currentSliderSecondaryValue[index] = value;
+                
+              },
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
+
 Map<dynamic, dynamic> data_dashdoard_histry() {
   return {};
 }
@@ -4146,7 +4225,8 @@ class GlobalData {
 }
 
 class GlobalData_model_for_web {
-  static final GlobalData_model_for_web _instance = GlobalData_model_for_web._internal();
+  static final GlobalData_model_for_web _instance =
+      GlobalData_model_for_web._internal();
   factory GlobalData_model_for_web() {
     return _instance;
   }
@@ -4163,35 +4243,44 @@ class GlobalData_model_for_web {
   }
 }
 
-
-Widget render_log_load(List<dynamic> data){
+Widget render_log_load(List<dynamic> data) {
   return ListView.builder(
-          itemCount: data
-              .length, // replace `models` with your data source
-          itemBuilder: (context, index) {
-            return ListTile(
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(data[index][0]),
-                    const SizedBox(
-                      width: 100,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Detect status:${data[index][1]}"),
-                        SizedBox(width: 20,),
-                        data[index][3]?Icon(Icons.circle,size: 20,color: Colors.green,):Icon(Icons.circle,size: 20,color: Colors.red,)
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                  ],
-                ),
-                subtitle: const Divider(color: Colors.black));
-          },
-        );
+    itemCount: data.length, // replace `models` with your data source
+    itemBuilder: (context, index) {
+      return ListTile(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(data[index][0]),
+              const SizedBox(
+                width: 100,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Detect status:${data[index][1]}"),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  data[index][3]
+                      ? Icon(
+                          Icons.circle,
+                          size: 20,
+                          color: Colors.green,
+                        )
+                      : Icon(
+                          Icons.circle,
+                          size: 20,
+                          color: Colors.red,
+                        )
+                ],
+              ),
+              const SizedBox(
+                width: 30,
+              ),
+            ],
+          ),
+          subtitle: const Divider(color: Colors.black));
+    },
+  );
 }
-
