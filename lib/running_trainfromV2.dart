@@ -47,6 +47,108 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    List list_comport = [];
+    Future get_list_comport() async {
+      final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:3000/found_comport'), // Replace with your backend URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        List buf = responseData['device'];
+        if(buf == []){
+          list_comport = ["no comport"];
+        }else{
+          list_comport = buf;
+        }
+      }
+      return true;
+    };
+
+    Future<void> use_comport_and_connect(String comport) async {
+      final response = await http.post(
+        Uri.parse(
+            'http://127.0.0.1:3000/connect_comport'), // Replace with your backend URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'device_name': comport,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+      }
+    }
+
+
+
+
+    void show_list_comport() async{
+      get_list_comport();
+      await Future.delayed(Duration(seconds: 1));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("comport list"),
+            content: SizedBox(
+              height: 300,
+              width: 300,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: list_comport.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Row(
+                                children: [
+                                  const Icon(Icons.camera_alt_sharp),
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(list_comport[index]),
+                                  const SizedBox(
+                                    width: 50,
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        use_comport_and_connect(list_comport[index]);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Use')),
+                                ],
+                              ),
+                            ),
+                            const Divider(color: Colors.black),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    };
+
     return Scaffold(
       appBar: AppBar(
         title: Container(
@@ -170,6 +272,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     title: '   Logout',
                     icon: const Icon(Icons.exit_to_app),
+                  ),
+                  SideMenuItemDataTile(
+                    highlightSelectedColor: Colors.white,
+                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                    isSelected: false,
+                    onTap: () {
+                      show_list_comport();
+                    },
+                    title: '   List comport',
+                    icon: const Icon(Icons.construction_outlined),
                   ),
                 ],
                 // footer: const Text('Footer'),
@@ -734,7 +846,7 @@ class _Running_WidgetState extends State<Running_Widget> {
 
   // get list model in my commputer
   // status plasma qrcode and wait----------------
-  String status_detect = 'wait';
+  Map<String, dynamic> status_detect = {'mode':{"qrdata":"0","hight":"0"}};
   void status_chacking() async {
     final response = await http.get(
       Uri.parse(
@@ -742,9 +854,15 @@ class _Running_WidgetState extends State<Running_Widget> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      status_detect = responseData['status_detect'];
+      print(responseData.containsKey('status_detect'));
+      if(responseData.containsKey('status_detect')){
+        status_detect = {'mode':responseData['status_detect']};
+      }
+      if(responseData.containsKey('qrdata')){
+        status_detect = {'mode':responseData['qrdata']};
+      }
     } else {
-      status_detect = 'wait';
+      status_detect = {'mode':{"qrdata":"0","hight":"0"}};
     }
   }
 
@@ -1125,13 +1243,13 @@ class _Running_WidgetState extends State<Running_Widget> {
                 ),
                 ElevatedButton(
                     onPressed: Popup_run_sync_data_setting,
-                    child: const Text("sync")),
+                    child: const Text("upload")),
                 const SizedBox(
                   width: 20,
                 ),
                 ElevatedButton(
                     onPressed: Popup_run_save_data_setting,
-                    child: const Text("save to data base")),
+                    child: const Text("download")),
               ],
             ),
             content: SizedBox(
@@ -1215,9 +1333,9 @@ class _Running_WidgetState extends State<Running_Widget> {
     // print("windows_hight $windowsHight");
 
     //swich command and mask
-    void Changed_mask_and_command() {
-      widget.st_mask_and_command = !widget.st_mask_and_command;
-    }
+    // void Changed_mask_and_command() {
+    //   widget.st_mask_and_command = !widget.st_mask_and_command;
+    // }
 
     return Transform.scale(
       alignment: Alignment.topLeft,
@@ -1266,7 +1384,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "process mode $status_detect",
+                      "tube H:${status_detect['mode']['hight']} Data:${status_detect['mode']['qrdata']}",
                       style: const TextStyle(fontSize: 20),
                     ),
                     Container(
@@ -1338,12 +1456,6 @@ class _Running_WidgetState extends State<Running_Widget> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                ElevatedButton(
-                                    onPressed: Changed_mask_and_command,
-                                    child: const Text("mask")),
-                                const SizedBox(
-                                  width: 10,
-                                )
                               ],
                             ),
                           ),
@@ -2109,13 +2221,13 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
               ),
               ElevatedButton(
                   onPressed: Popup_run_sync_data_setting,
-                  child: const Text("sync")),
+                  child: const Text("upload setting")),
               const SizedBox(
                 width: 20,
               ),
               ElevatedButton(
                   onPressed: Popup_run_save_data_setting,
-                  child: const Text("save to data base")),
+                  child: const Text("download setting")),
             ],
           ),
           content: SizedBox(
@@ -2480,9 +2592,14 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
         }
         count++;
       }
-      setState(() {
-        print(data_load_log);
-      });
+      // setState(() {
+      //   print(data_load_log);
+      // });
+      if (mounted) { // Check if the widget is still mounted
+        setState(() {
+          print(data_load_log);
+        });
+      }
       // print(responseData);
     }
   }
@@ -4165,7 +4282,29 @@ List<String> _nameSlider = [
 List<double> _max = [179,179,255,255,255,255,100,100,10,1000];
 List<double> _min = [1,1,1,1,1,1,1,1,1,1];
 List<int> _divisions = [179,179,255,255,255,255,100,100,10,1000];
-//1
+
+void mask_setting()async{
+  final response = await http.post(
+    Uri.parse(
+        'http://127.0.0.1:2545/Setting_realtime_mask'), // Replace with your backend URL
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "Hue_Min":_currentSliderSecondaryValue[0].toInt().toString(),
+      "Hue_Max":_currentSliderSecondaryValue[1].toInt().toString(),
+      "Sat_Min":_currentSliderSecondaryValue[2].toInt().toString(),
+      "Sat_Max":_currentSliderSecondaryValue[3].toInt().toString(),
+      "Val_Min":_currentSliderSecondaryValue[4].toInt().toString(),
+      "Val_MAX":_currentSliderSecondaryValue[5].toInt().toString(),
+      "Brightness":_currentSliderSecondaryValue[6].toInt().toString(),
+      "Contrast":_currentSliderSecondaryValue[7].toInt().toString(),
+      "Saturation":_currentSliderSecondaryValue[8].toInt().toString(),
+      "Range":_currentSliderSecondaryValue[9].toInt().toString(),
+    }),
+  );
+}
+
 Widget Setting_mask() {
   return Expanded(
     child: ListView.builder(
@@ -4188,7 +4327,7 @@ Widget Setting_mask() {
               divisions: _divisions[index],
               onChanged: (double value) {
                 _currentSliderSecondaryValue[index] = value;
-
+                mask_setting();
               },
             ),
           ],
