@@ -3962,49 +3962,6 @@ class _DataCenter_WidgetState_fortrain_model
     // runGetListFromGoodPool();
     // runGetListFromBadPool();
   }
-
-  // Widget Goodrender_image() {
-  //   // print(widget.list_image_good_pool);
-  //   return SizedBox(
-  //     height: 800,
-  //     width: 1600,
-  //     child: Container(
-  //       child: SingleChildScrollView(
-  //         child: GridView.builder(
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           shrinkWrap: true,
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 5,
-  //             crossAxisSpacing: 5.0,
-  //             mainAxisSpacing: 5.0,
-  //           ),
-  //           itemCount: widget.list_image_good_pool.length,
-  //           // itemCount: 30,
-  //           itemBuilder: (context, index) {
-  //             return Container(
-  //               // color: Colors.blue,
-  //               child: Column(
-  //                 children: [
-  //                   // Image.network(
-  //                   //   "http://210.246.215.145:1234/show/train_good/${widget.list_image_good_pool[index]}",
-  //                   //   height: 250,
-  //                   // ),
-  //                   CachedNetworkImage(
-  //                     imageUrl: "http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
-  //                     height: 250,
-  //                     placeholder: (context, url) => const CircularProgressIndicator(),
-  //                     errorWidget: (context, url, error) => const Icon(Icons.error),
-  //                   ),
-
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 Widget Goodrender_image() {
   return SizedBox(
     height: 800,
@@ -4051,47 +4008,6 @@ Widget Goodrender_image() {
     ),
   );
 }
-
-//   Widget badrender_image() {
-//     return SizedBox(
-//       height: 800,
-//       width: 1600,
-//       child: Container(
-//         child: SingleChildScrollView(
-//           child: GridView.builder(
-//             physics: const NeverScrollableScrollPhysics(),
-//             shrinkWrap: true,
-//             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//               crossAxisCount: 5,
-//               crossAxisSpacing: 5.0,
-//               mainAxisSpacing: 5.0,
-//             ),
-//             itemCount: widget.list_image_bad_pool.length,
-//             itemBuilder: (context, index) {
-//               return Container(
-//                 // color: Colors.blue,
-//                 child: Column(
-//                   children: [
-//                     // Image.network(
-//                     //   "http://210.246.215.145:1234/show/train_bad/${widget.list_image_bad_pool[index]}",
-//                     //   height: 250,
-//                     // ),
-//                     CachedNetworkImage(
-//                       imageUrl: "http://210.246.215.145:1234/show/train_bad/${widget.list_image_good_pool[index]}",
-//                       height: 250,
-//                       placeholder: (context, url) => const CircularProgressIndicator(),
-//                       errorWidget: (context, url, error) => const Icon(Icons.error),
-//                     ),
-
-//                   ],
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-// }
 
 Widget badrender_image() {
   return SizedBox(
@@ -4219,6 +4135,7 @@ Widget badrender_image() {
         const SizedBox(
           height: 50,
         ),
+        widget.display_swich ? Text("Image All : ${widget.list_image_good_pool.length}"):Text("Image All : ${widget.list_image_bad_pool.length}"),
         widget.display_swich ? Goodrender_image() : badrender_image(),
       ],
     );
