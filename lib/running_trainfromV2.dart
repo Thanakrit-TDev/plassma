@@ -1,4 +1,6 @@
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_side_menu/flutter_side_menu.dart';
@@ -16,6 +18,8 @@ import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 // void main() => runApp(MyApp());
 class running_trainfrom extends StatelessWidget {
@@ -214,20 +218,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: const Icon(Icons.run_circle),
                     // icon: Image.asset("images/arrows.png")
                   ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor:
-                        const Color.fromARGB(255, 255, 255, 255),
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option7;
-                      });
-                    },
-                    title: '   Ai process',
-                    icon: const Icon(Icons.precision_manufacturing_rounded),
-                    // icon: Image.asset("images/arrows.png")
-                  ),
+                  // SideMenuItemDataTile(
+                  //   highlightSelectedColor:
+                  //       const Color.fromARGB(255, 255, 255, 255),
+                  //   hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                  //   isSelected: false,
+                  //   onTap: () {
+                  //     setState(() {
+                  //       _selectedOption = Options.option7;
+                  //     });
+                  //   },
+                  //   title: '   Ai process',
+                  //   icon: const Icon(Icons.precision_manufacturing_rounded),
+                  //   // icon: Image.asset("images/arrows.png")
+                  // ),
                   SideMenuItemDataTile(
                     highlightSelectedColor: Colors.white,
                     hoverColor: const Color.fromARGB(255, 156, 156, 156),
@@ -320,8 +324,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         DataCenter_Widget()
                       else if (_selectedOption == Options.option5)
                         DataCenter_for_train()
-                      else if (_selectedOption == Options.option7)
-                        ai_process(),
+                      // else if (_selectedOption == Options.option7)
+                      //   ai_process(),
                     ],
                   ),
                 ),
@@ -388,7 +392,7 @@ class _Running_WidgetState extends State<Running_Widget> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      print('Response data: ${responseData['st']}');
+      // print('Response data: ${responseData['st']}');
       if (responseData['stsave']) {
         use_now_setting();
       } else {
@@ -480,7 +484,7 @@ class _Running_WidgetState extends State<Running_Widget> {
   // var Historylist;
   var datatemset = {};
   void use_now_setting() async {
-    print("use now setting");
+    // print("use now setting");
     final response = await http.get(
       Uri.parse(
           'http://127.0.0.1:5000/loadsetting'), // Replace with your backend URL
@@ -842,7 +846,7 @@ class _Running_WidgetState extends State<Running_Widget> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       list_model_in_com = responseData['model_version_inmycomputer'];
-      print("model in mycomputer $responseData");
+      // print("model in mycomputer $responseData");
       // status_detect = responseData['status_detect'];
     }
   }
@@ -968,7 +972,7 @@ class _Running_WidgetState extends State<Running_Widget> {
     camera_setting();
     get_model_from_internet();
     get_list_model_inmycomputer();
-    print("kuy page 1");
+    // print("kuy page 1");
     super.initState();
     Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
       if (!_updating) {
@@ -1128,7 +1132,7 @@ class _Running_WidgetState extends State<Running_Widget> {
     }
 
     void Popup_run_sync_data_setting() async {
-      print("Popup_run_sync_data_setting");
+      // print("Popup_run_sync_data_setting");
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -1165,7 +1169,7 @@ class _Running_WidgetState extends State<Running_Widget> {
     }
 
     void Popup_run_save_data_setting() async {
-      print("Popup_run_sync_data_setting");
+      // print("Popup_run_sync_data_setting");
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -1815,6 +1819,11 @@ class Dashboard_Widget extends StatefulWidget {
   String global_mse = "0.001";
   String global_performance = "99";
 
+  List<String> selected_mode_getdata = <String>['Day', 'Week', 'Month', 'Year'];
+  String? sec_get_data_mode = "Day";
+
+  double graph_high_golbal = 100;
+
   @override
   State<Dashboard_Widget> createState() => _Dashboard_Widget();
 }
@@ -1853,7 +1862,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      print('Response data: ${responseData['st']}');
+      // print('Response data: ${responseData['st']}');
       if (responseData['stsave']) {
         use_now_setting();
       } else {
@@ -1938,11 +1947,12 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
         },
       );
     }
+    setState(() {});
   }
 
   var datatemset = {};
   void use_now_setting() async {
-    print("use now setting");
+    // print("use now setting");
     final response = await http.get(
       Uri.parse(
           'http://127.0.0.1:5000/loadsetting'), // Replace with your backend URL
@@ -2166,7 +2176,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
   }
 
   void Popup_run_sync_data_setting() async {
-    print("Popup_run_sync_data_setting");
+    // print("Popup_run_sync_data_setting");
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -2203,7 +2213,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
   }
 
   void Popup_run_save_data_setting() async {
-    print("Popup_run_sync_data_setting");
+    // print("Popup_run_sync_data_setting");
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -2396,6 +2406,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
     return DateFormat('d:M:y').format(date);
   }
 
+  
   void get_history_for_graph() async {
     setState(() {
       widget.st_download_his = false;
@@ -2408,14 +2419,66 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
+      body: jsonEncode(<String, String?>{
         'start': startDateStamp.toString(),
-        'end': endDateStamp.toString()
+        'end': endDateStamp.toString(),
+        'mode': widget.sec_get_data_mode
       }),
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      // print('Response data: ${responseData['hisreturn']}');
+      var bufData = responseData['hisreturn']["false_tube"];
+      var bufData2 = responseData['hisreturn']["true_tube"];
+      var bufData_souse = responseData['hisreturn']["souse"];
+      print(bufData_souse);
+      print(bufData);
+
+
+      double graph_high_sub = 100;
+      setState(() {
+        widget.dataSource_his = [];
+        bufData.forEach(
+          (key, value) {
+            widget.dataSource_his.add(ChartData(key, value.toDouble()));
+            if(graph_high_sub < value.toDouble()){
+              graph_high_sub = value.toDouble();
+            }
+            print("${key}  ${value}");
+          },
+          
+        );
+        widget.dataSource_his_true = [];
+        bufData2.forEach(
+          (key, value) {
+            widget.dataSource_his_true.add(ChartData(key, value.toDouble()));
+            if(graph_high_sub < value.toDouble()){
+              graph_high_sub = value.toDouble();
+            }
+          },
+        );
+        widget.graph_high_golbal = graph_high_sub;
+        widget.st_download_his = true;
+      });
+
+      // print(widget.dataSource_his);
+      // print(widget.dataSource_his_true);
+    }
+  }
+
+  void start_frast_get_graph() async {
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:5000/get_history_for_graph'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'start': DateTime.now().subtract(Duration(seconds: 604800)).toString(),
+        'end': DateTime.now().toString()
+      }),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
       var bufData = responseData['hisreturn']["false_tube"];
       var bufData2 = responseData['hisreturn']["true_tube"];
 
@@ -2432,21 +2495,17 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
             widget.dataSource_his_true.add(ChartData(key, value.toDouble()));
           },
         );
-        widget.st_download_his = true;
       });
 
-      // LoadingAnimationWidget.twistingDots(
-      //     leftDotColor: const Color(0xFF1A1A3F),
-      //     rightDotColor: const Color(0xFFEA3799),
-      //     size: 200,
-      //   ),
+      
     }
   }
+
   // schedule-------------------------------------------------
 
   void swich_work() {
     widget.st_swich_graph = !widget.st_swich_graph;
-    print(widget.st_swich_graph);
+    // print(widget.st_swich_graph);
     setState(() {});
   }
 
@@ -2458,10 +2517,10 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
           child: SfCartesianChart(
               primaryXAxis: const CategoryAxis(),
               primaryYAxis:
-                  const NumericAxis(minimum: 0, maximum: 100, interval: 25),
+                  NumericAxis(minimum: 0, maximum: widget.graph_high_golbal, interval: 25),
               series: <CartesianSeries<ChartData, String>>[
                 ColumnSeries<ChartData, String>(
-                  dataSource: widget.dataSource_his,
+                  dataSource: widget.dataSource_his_true,
                   xValueMapper: (ChartData data, _) => data.x,
                   yValueMapper: (ChartData data, _) => data.y,
                   name: 'Series 1',
@@ -2475,7 +2534,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                   color: const Color.fromARGB(0, 22, 243, 29),
                 ),
                 ColumnSeries<ChartData, String>(
-                  dataSource: widget.dataSource_his_true,
+                  dataSource: widget.dataSource_his,
                   xValueMapper: (ChartData data, _) => data.x,
                   yValueMapper: (ChartData data, _) => data.y,
                   name: 'Series 1',
@@ -2621,7 +2680,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       if (mounted) {
         // Check if the widget is still mounted
         setState(() {
-          print(data_load_log);
+          // print(data_load_log);
         });
       }
       // print(responseData);
@@ -2632,6 +2691,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
   void initState() {
     super.initState();
     use_now_setting();
+    start_frast_get_graph();
 
     Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
       if (!_updating) {
@@ -2678,11 +2738,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text("Detecttion lost",
-                                    style: TextStyle(
-                                        fontSize: 15, fontFamily: 'Poppins')),
                                 SizedBox(
-                                  width: 700,
+                                  width: 920,
                                   // color: Colors.amber,
                                   child: Row(
                                     children: [
@@ -2735,42 +2792,111 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                             style: TextStyle(
                                                 color: Color(0xFF5A6ACF)),
                                           )),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                
+                                      DropdownButtonHideUnderline(
+                                        child: DropdownButton2<String>(
+                                          isExpanded: true,
+                                          hint: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons.list,
+                                                size: 16,
+                                                color: Colors.yellow,
+                                              ),
+                                              SizedBox(
+                                                width: 4,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  'Select Item',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.yellow,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          items: widget.selected_mode_getdata
+                                              .map((String item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item,
+                                              child: Text(
+                                                item,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            );
+                                          }).toList(),
+                                          value: widget.sec_get_data_mode,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              widget.sec_get_data_mode = value;
+                                            });
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 35,
+                                            width: 160,
+                                            padding: const EdgeInsets.only(
+                                                left: 14, right: 14),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Color(0xFF5a67ba),
+                                            ),
+                                            elevation: 2,
+                                          ),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.arrow_forward_ios_outlined,
+                                            ),
+                                            iconSize: 14,
+                                            iconEnabledColor: Color.fromARGB(255, 255, 255, 255),
+                                            iconDisabledColor: Colors.grey,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            maxHeight: 200,
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: Color(0xFF5a67ba),
+                                            ),
+                                            offset: const Offset(-20, -10),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness: MaterialStateProperty
+                                                  .all<double>(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all<
+                                                      bool>(true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                            padding: EdgeInsets.only(
+                                                left: 14, right: 14),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const Text(
-                            "3 / 15",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600),
-                          ),
-                          Container(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.arrow_upward,
-                                  color: Colors.green,
-                                  size: 15,
-                                ),
-                                Text(
-                                  "20 %",
-                                  style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      fontFamily: 'Poppins'),
-                                ),
-                                Text(
-                                  " vs last week",
-                                  style: TextStyle(fontFamily: 'Poppins'),
-                                )
-                              ],
-                            ),
-                          ),
+ 
                           swich_graph(),
                           Container(
                             child: Row(
@@ -2780,7 +2906,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                   color: Color(0xFF5A6ACF),
                                   size: 20,
                                 ),
-                                const Text(" This Week"),
+                                const Text(" Detect True"),
                                 const SizedBox(
                                   width: 50,
                                 ),
@@ -2789,7 +2915,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                   color: Color(0xFFF2383A),
                                   size: 20,
                                 ),
-                                const Text(" Last Week"),
+                                const Text(" Detect False"),
                                 const SizedBox(
                                   width: 50,
                                 ),
@@ -3366,14 +3492,13 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      
+
       // if (responseData['files'] != []){
       //   widget.badPool_list = (responseData['files'] as List).sublist(0, 30);
       // }
       // else{
-        widget.GoodPool_list = responseData['files'];
+      widget.GoodPool_list = responseData['files'];
       // }
-        
 
       widget.list_bool_del_good = [];
       widget.list_image_good_pool = [];
@@ -3576,186 +3701,160 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     runGetListFromBadPool();
   }
 
-  // Widget Goodrender_image() {
-  //   return SizedBox(
-  //     height: 800,
-  //     width: 1600,
-  //     child: Container(
-  //       child: SingleChildScrollView(
-  //         child: GridView.builder(
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           shrinkWrap: true,
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 5,
-  //             crossAxisSpacing: 5.0,
-  //             mainAxisSpacing: 5.0,
-  //           ),
-  //           itemCount: widget.list_bool_del_good.length,
-  //           itemBuilder: (context, index) {
-  //             return Container(
-  //               // color: Colors.blue,
-  //               child: Column(
-  //                 children: [
-  //                   Row(
-  //                     children: [
-  //                       const SizedBox(
-  //                         width: 25,
-  //                       ),
-  //                       Checkbox(
-  //                         value: widget.list_bool_move_to_bad[index],
-  //                         onChanged: (bool? value) {
-  //                           _toggleCheckbox_move_to_bad(value, index);
-  //                         },
-  //                       ),
-  //                       const Text("move to bad"),
-  //                       // SizedBox(width: 10,),
-  //                       Checkbox(
-  //                         value: widget.list_bool_del_good[index],
-  //                         onChanged: (bool? value) {
-  //                           _toggleCheckbox_good(value, index);
-  //                         },
-  //                       ),
-  //                       const Text("delet"),
-  //                       // SizedBox(width: 10,),
-  //                       Checkbox(
-  //                         value: widget.list_bool_save_to_good[index],
-  //                         onChanged: (bool? value) {
-  //                           _toggleCheckbox_save_good_to_dataset(value, index);
-  //                         },
-  //                       ),
-  //                       const Text("save"),
-  //                     ],
-  //                   ),
-  //                   Image.network(
-  //                     "http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
-  //                     height: 250,
-  //                   ),
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
   Widget Goodrender_image() {
-  return SizedBox(
-    height: 800,
-    width: 1600,
-    child: GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
+    return SizedBox(
+      height: 800,
+      width: 1600,
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
+        ),
+        itemCount: widget.list_bool_del_good.length,
+        itemBuilder: (context, index) {
+          return Container(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 25,
+                    ),
+                    Checkbox(
+                      value: widget.list_bool_move_to_bad[index],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox_move_to_bad(value, index);
+                      },
+                    ),
+                    const Text("move to bad"),
+                    Checkbox(
+                      value: widget.list_bool_del_good[index],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox_good(value, index);
+                      },
+                    ),
+                    const Text("delete"),
+                    Checkbox(
+                      value: widget.list_bool_save_to_good[index],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox_save_good_to_dataset(value, index);
+                      },
+                    ),
+                    const Text("save"),
+                  ],
+                ),
+                CachedNetworkImage(
+                  imageUrl:
+                      "http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
+                  height: 250,
+                  // placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => SizedBox(
+                    width: 250.0,
+                    height: 100.0,
+                    child: CircularProgressIndicator(
+                      color: Color.fromARGB(255, 136, 32, 255),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) {
+                    return Column(
+                      children: [
+                        const Icon(Icons.error),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(
+                                () {}); // Force rebuild to retry image loading
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              ],
+            ),
+          );
+        },
       ),
-      itemCount: widget.list_bool_del_good.length,
-      itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  Checkbox(
-                    value: widget.list_bool_move_to_bad[index],
-                    onChanged: (bool? value) {
-                      _toggleCheckbox_move_to_bad(value, index);
-                    },
-                  ),
-                  const Text("move to bad"),
-                  Checkbox(
-                    value: widget.list_bool_del_good[index],
-                    onChanged: (bool? value) {
-                      _toggleCheckbox_good(value, index);
-                    },
-                  ),
-                  const Text("delete"),
-                  Checkbox(
-                    value: widget.list_bool_save_to_good[index],
-                    onChanged: (bool? value) {
-                      _toggleCheckbox_save_good_to_dataset(value, index);
-                    },
-                  ),
-                  const Text("save"),
-                ],
-              ),
-              Image.network(
-                "http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
-                height: 250,
-              ),
-            ],
-          ),
-        );
-      },
-    ),
-  );
-}
-
+    );
+  }
 
   Widget badrender_image() {
     return SizedBox(
       height: 800,
       width: 1600,
-      child: Container(
-        child: SingleChildScrollView(
-          child: GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
-            ),
-            itemCount: widget.list_image_bad_pool.length,
-            itemBuilder: (context, index) {
-              return Container(
-                // color: Colors.blue,
-                child: Column(
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
+        ),
+        itemCount: widget.list_image_bad_pool.length,
+        itemBuilder: (context, index) {
+          return Container(
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        Checkbox(
-                          value: widget.list_bool_move_to_good[index],
-                          onChanged: (bool? value) {
-                            _toggleCheckbox_move_to_good(value, index);
-                          },
-                        ),
-                        const Text("move to good"),
-                        // SizedBox(width: 10,),
-                        Checkbox(
-                          value: widget.list_bool_del_bad[index],
-                          onChanged: (bool? value) {
-                            _toggleCheckbox_bad(value, index);
-                          },
-                        ),
-                        const Text("delet"),
-                        // SizedBox(width: 10,),
-                        Checkbox(
-                          value: widget.list_bool_save_to_bad[index],
-                          onChanged: (bool? value) {
-                            _toggleCheckbox_save_bad_to_dataset(value, index);
-                          },
-                        ),
-                        const Text("save"),
-                      ],
+                    const SizedBox(
+                      width: 25,
                     ),
-                    Image.network(
-                      "http://210.246.215.145:1234/show/bad/${widget.list_image_bad_pool[index]}",
-                      height: 250,
+                    Checkbox(
+                      value: widget.list_bool_move_to_good[index],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox_move_to_good(value, index);
+                      },
                     ),
-                    
+                    const Text("move to good"),
+                    // SizedBox(width: 10,),
+                    Checkbox(
+                      value: widget.list_bool_del_bad[index],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox_bad(value, index);
+                      },
+                    ),
+                    const Text("delet"),
+                    // SizedBox(width: 10,),
+                    Checkbox(
+                      value: widget.list_bool_save_to_bad[index],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox_save_bad_to_dataset(value, index);
+                      },
+                    ),
+                    const Text("save"),
                   ],
                 ),
-              );
-            },
-          ),
-        ),
+                CachedNetworkImage(
+                  imageUrl:
+                      "http://210.246.215.145:1234/show/bad/${widget.list_image_bad_pool[index]}",
+                  height: 250,
+                  // placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => SizedBox(
+                    width: 250.0,
+                    height: 100.0,
+                    child: CircularProgressIndicator(
+                      color: Color.fromARGB(255, 136, 32, 255),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) {
+                    return Column(
+                      children: [
+                        const Icon(Icons.error),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(
+                                () {}); // Force rebuild to retry image loading
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -3867,7 +3966,6 @@ class DataCenter_for_train extends StatefulWidget {
   List<String> list_image_good_pool = <String>[];
   late List GoodPool_list;
 
-
   //bad pool
   List<String> list_image_bad_pool = <String>[];
   late List badPool_list;
@@ -3962,100 +4060,106 @@ class _DataCenter_WidgetState_fortrain_model
     // runGetListFromGoodPool();
     // runGetListFromBadPool();
   }
-Widget Goodrender_image() {
-  return SizedBox(
-    height: 800,
-    width: 1600,
-    child: GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
+
+  Widget Goodrender_image() {
+    return SizedBox(
+      height: 800,
+      width: 1600,
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
+        ),
+        itemCount: widget.list_image_good_pool.length,
+        itemBuilder: (context, index) {
+          return Container(
+            child: Column(
+              children: [
+                CachedNetworkImage(
+                  imageUrl:
+                      "http://210.246.215.145:1234/show/train_good/${widget.list_image_good_pool[index]}",
+                  height: 250,
+                  // placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => SizedBox(
+                    width: 250.0,
+                    height: 100.0,
+                    child: CircularProgressIndicator(
+                      color: Color.fromARGB(255, 136, 32, 255),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) {
+                    return Column(
+                      children: [
+                        const Icon(Icons.error),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(
+                                () {}); // Force rebuild to retry image loading
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              ],
+            ),
+          );
+        },
       ),
-      itemCount: widget.list_image_good_pool.length,
-      itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: [
-              CachedNetworkImage(
-                imageUrl: "http://210.246.215.145:1234/show/good/${widget.list_image_good_pool[index]}",
-                height: 250,
-                // placeholder: (context, url) => const CircularProgressIndicator(),
-                placeholder: (context, url) => SizedBox(
-                  width: 250.0,
-                  height: 100.0,
-                  child: CircularProgressIndicator(color: Color.fromARGB(255, 136, 32, 255),),
-                ),
-                errorWidget: (context, url, error) {
-                  return Column(
-                    children: [
-                      const Icon(Icons.error),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {}); // Force rebuild to retry image loading
-                        },
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  );
-                },
-              )
+    );
+  }
 
-            ],
-          ),
-        );
-      },
-    ),
-  );
-}
-
-Widget badrender_image() {
-  return SizedBox(
-    height: 800,
-    width: 1600,
-    child: GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
+  Widget badrender_image() {
+    return SizedBox(
+      height: 800,
+      width: 1600,
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
+        ),
+        itemCount: widget.list_image_bad_pool.length,
+        itemBuilder: (context, index) {
+          return Container(
+            child: Column(
+              children: [
+                CachedNetworkImage(
+                  imageUrl:
+                      "http://210.246.215.145:1234/show/train_bad/${widget.list_image_bad_pool[index]}",
+                  height: 250,
+                  // placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => SizedBox(
+                    width: 250.0,
+                    height: 100.0,
+                    child: CircularProgressIndicator(
+                      color: Color.fromARGB(255, 136, 32, 255),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) {
+                    return Column(
+                      children: [
+                        const Icon(Icons.error),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(
+                                () {}); // Force rebuild to retry image loading
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              ],
+            ),
+          );
+        },
       ),
-      itemCount: widget.list_image_bad_pool.length,
-      itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: [
-              CachedNetworkImage(
-                imageUrl: "http://210.246.215.145:1234/show/bad/${widget.list_image_bad_pool[index]}",
-                height: 250,
-                // placeholder: (context, url) => const CircularProgressIndicator(),
-                placeholder: (context, url) => SizedBox(
-                  width: 250.0,
-                  height: 100.0,
-                  child: CircularProgressIndicator(color: Color.fromARGB(255, 136, 32, 255),),
-                ),
-                errorWidget: (context, url, error) {
-                  return Column(
-                    children: [
-                      const Icon(Icons.error),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {}); // Force rebuild to retry image loading
-                        },
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  );
-                },
-              )
-
-            ],
-          ),
-        );
-      },
-    ),
-  );
-}
-
+    );
+  }
 
   void set_mode_display() {
     setState(() {
@@ -4135,7 +4239,9 @@ Widget badrender_image() {
         const SizedBox(
           height: 50,
         ),
-        widget.display_swich ? Text("Image All : ${widget.list_image_good_pool.length}"):Text("Image All : ${widget.list_image_bad_pool.length}"),
+        widget.display_swich
+            ? Text("Image All : ${widget.list_image_good_pool.length}")
+            : Text("Image All : ${widget.list_image_bad_pool.length}"),
         widget.display_swich ? Goodrender_image() : badrender_image(),
       ],
     );
@@ -4561,215 +4667,215 @@ Widget render_log_load(List<dynamic> data) {
   );
 }
 
-class ai_process extends StatefulWidget {
-  ai_process({super.key});
-  @override
-  State<ai_process> createState() => _ai_process();
+// class ai_process extends StatefulWidget {
+//   ai_process({super.key});
+//   @override
+//   State<ai_process> createState() => _ai_process();
 
-  // keep datasetting
-  List<bool> setting_list = [true, true, true];
-  // load setting
-  bool st_run_frast = true;
-}
+//   // keep datasetting
+//   List<bool> setting_list = [true, true, true];
+//   // load setting
+//   bool st_run_frast = true;
+// }
 
-class _ai_process extends State<ai_process> {
-  @override
-  Future<void> loadsetting_ai() async {
-    final response = await http.get(
-      Uri.parse(
-          'http://127.0.0.1:3500/get_setting_ai'), // Replace with your backend URL
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      widget.setting_list[0] = responseData['setting'][0];
-      widget.setting_list[1] = responseData['setting'][1];
-      widget.setting_list[2] = responseData['setting'][2];
-    }
-  }
+// class _ai_process extends State<ai_process> {
+//   @override
+//   Future<void> loadsetting_ai() async {
+//     final response = await http.get(
+//       Uri.parse(
+//           'http://127.0.0.1:3500/get_setting_ai'), // Replace with your backend URL
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//       },
+//     );
+//     if (response.statusCode == 200) {
+//       final Map<String, dynamic> responseData = jsonDecode(response.body);
+//       widget.setting_list[0] = responseData['setting'][0];
+//       widget.setting_list[1] = responseData['setting'][1];
+//       widget.setting_list[2] = responseData['setting'][2];
+//     }
+//   }
 
-  Future<void> dumpsetting_ai() async {
-    final response = await http.post(
-      Uri.parse(
-          'http://127.0.0.1:3500/dumpsetting_ai'), // Replace with your backend URL
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, List>{
-        'setting': widget.setting_list,
-      }),
-    );
-  }
+//   Future<void> dumpsetting_ai() async {
+//     final response = await http.post(
+//       Uri.parse(
+//           'http://127.0.0.1:3500/dumpsetting_ai'), // Replace with your backend URL
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//       },
+//       body: jsonEncode(<String, List>{
+//         'setting': widget.setting_list,
+//       }),
+//     );
+//   }
 
-  void save_setting_ai() {
-    print("settingggguglhlggg");
-    dumpsetting_ai();
-  }
+//   void save_setting_ai() {
+//     print("settingggguglhlggg");
+//     dumpsetting_ai();
+//   }
 
-  void initState() {
-    print("kuy");
-    setState(() {
-      loadsetting_ai();
-    });
-    super.initState();
-  }
+//   void initState() {
+//     print("kuy");
+//     setState(() {
+//       loadsetting_ai();
+//     });
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    int windowsHight = ((MediaQuery.of(context).size).height).toInt();
-    return Transform.scale(
-      alignment: Alignment.topLeft,
-      scale: (windowsHight / 1000),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 400,
-              // color: Color.fromARGB(255, 165, 165, 165),
-              child: Column(
-                children: [
-                  Text(
-                    "setting AI mode",
-                    style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                  ),
-                  Container(
-                    height: 400,
-                    width: 400,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 300,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 50,
-                                    ),
-                                    Text("Run AI"),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 100,
-                                child: Switch(
-                                  value: widget.setting_list[0],
-                                  onChanged: (bool newValue) {
-                                    setState(() {
-                                      widget.setting_list[0] =
-                                          newValue; // Update the value of the switch
-                                      save_setting_ai();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 300,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 50,
-                                    ),
-                                    Text("Save image prediction"),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 100,
-                                child: Switch(
-                                  value: widget.setting_list[1],
-                                  onChanged: (bool newValue) {
-                                    setState(() {
-                                      widget.setting_list[1] =
-                                          newValue; // Update the value of the switch
-                                      save_setting_ai();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 300,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 50,
-                                    ),
-                                    Text("Auto upload"),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 100,
-                                child: Switch(
-                                  value: widget.setting_list[2],
-                                  onChanged: (bool newValue) {
-                                    setState(() {
-                                      widget.setting_list[2] =
-                                          newValue; // Update the value of the switch
-                                      save_setting_ai();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: 400,
-              // color: Color.fromARGB(255, 165, 165, 165),
-              child: Column(
-                children: [
-                  Text("Input Image",
-                      style: TextStyle(fontSize: 20, fontFamily: 'Poppins')),
-                  Container(
-                    color: Colors.amberAccent,
-                    height: 400,
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: 400,
-              // color: Color.fromARGB(255, 165, 165, 165),
-              child: Column(
-                children: [
-                  Text("Output Data",
-                      style: TextStyle(fontSize: 20, fontFamily: 'Poppins')),
-                  Container(
-                    color: Colors.amberAccent,
-                    height: 400,
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-      ]),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     int windowsHight = ((MediaQuery.of(context).size).height).toInt();
+//     return Transform.scale(
+//       alignment: Alignment.topLeft,
+//       scale: (windowsHight / 1000),
+//       child: Column(children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//           children: [
+//             Container(
+//               width: 400,
+//               // color: Color.fromARGB(255, 165, 165, 165),
+//               child: Column(
+//                 children: [
+//                   Text(
+//                     "setting AI mode",
+//                     style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+//                   ),
+//                   Container(
+//                     height: 400,
+//                     width: 400,
+//                     child: Column(
+//                       children: [
+//                         Container(
+//                           height: 50,
+//                           child: Row(
+//                             children: [
+//                               Container(
+//                                 width: 300,
+//                                 child: Row(
+//                                   children: [
+//                                     SizedBox(
+//                                       width: 50,
+//                                     ),
+//                                     Text("Run AI"),
+//                                   ],
+//                                 ),
+//                               ),
+//                               Container(
+//                                 width: 100,
+//                                 child: Switch(
+//                                   value: widget.setting_list[0],
+//                                   onChanged: (bool newValue) {
+//                                     setState(() {
+//                                       widget.setting_list[0] =
+//                                           newValue; // Update the value of the switch
+//                                       save_setting_ai();
+//                                     });
+//                                   },
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                         Container(
+//                           height: 50,
+//                           child: Row(
+//                             children: [
+//                               Container(
+//                                 width: 300,
+//                                 child: Row(
+//                                   children: [
+//                                     SizedBox(
+//                                       width: 50,
+//                                     ),
+//                                     Text("Save image prediction"),
+//                                   ],
+//                                 ),
+//                               ),
+//                               Container(
+//                                 width: 100,
+//                                 child: Switch(
+//                                   value: widget.setting_list[1],
+//                                   onChanged: (bool newValue) {
+//                                     setState(() {
+//                                       widget.setting_list[1] =
+//                                           newValue; // Update the value of the switch
+//                                       save_setting_ai();
+//                                     });
+//                                   },
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                         Container(
+//                           height: 50,
+//                           child: Row(
+//                             children: [
+//                               Container(
+//                                 width: 300,
+//                                 child: Row(
+//                                   children: [
+//                                     SizedBox(
+//                                       width: 50,
+//                                     ),
+//                                     Text("Auto upload"),
+//                                   ],
+//                                 ),
+//                               ),
+//                               Container(
+//                                 width: 100,
+//                                 child: Switch(
+//                                   value: widget.setting_list[2],
+//                                   onChanged: (bool newValue) {
+//                                     setState(() {
+//                                       widget.setting_list[2] =
+//                                           newValue; // Update the value of the switch
+//                                       save_setting_ai();
+//                                     });
+//                                   },
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   )
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               width: 400,
+//               // color: Color.fromARGB(255, 165, 165, 165),
+//               child: Column(
+//                 children: [
+//                   Text("Input Image",
+//                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins')),
+//                   Container(
+//                     color: Colors.amberAccent,
+//                     height: 400,
+//                   )
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               width: 400,
+//               // color: Color.fromARGB(255, 165, 165, 165),
+//               child: Column(
+//                 children: [
+//                   Text("Output Data",
+//                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins')),
+//                   Container(
+//                     color: Colors.amberAccent,
+//                     height: 400,
+//                   )
+//                 ],
+//               ),
+//             )
+//           ],
+//         )
+//       ]),
+//     );
+//   }
+// }

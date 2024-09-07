@@ -49,6 +49,7 @@ dependencies:
   loading_animation_widget: ^1.2.1
 
   cached_network_image: ^3.2.1
+  dropdown_button2: ^2.3.9
 
 
 dev_dependencies:
