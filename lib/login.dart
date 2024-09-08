@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 
 
 import 'package:plassma/running_trainfromV2.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 // import 'package:plassma/testvdo.dart';
 
 // import 'dart:convert';
@@ -29,63 +31,63 @@ class _MyHomePageState extends State<Login> {
     final String t = textUser.text;
     final String a = textPass.text;
 
-    // final response = await http.post(
-    //   Uri.parse('http://kuywin.bd2-cloud.net/login'),  // Replace with your backend URL
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, String>{
-    //     't': t,
-    //     'a': a,
-    //   }),
-    // );
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:3500/login'),  // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        't': t,
+        'a': a,
+      }),
+    );
 
-    // if (response.statusCode == 200) {
-    //   final Map<String, dynamic> responseData = jsonDecode(response.body);
-    //   print('Response data: ${responseData['st']}');
-    //   if(responseData['st']){
-    //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const running_trainfrom()));
-    //   }else{
-    //     showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) {
-    //         return AlertDialog(
-    //           // title: Text("Model version $version"),
-    //           content: const SizedBox(
-    //             height: 50,
-    //             width: 200,
-    //             child: Column(
-    //               children: [
-    //                 Center(
-    //                   child: Row(
-    //                     children: [
-    //                       Icon(Icons.report_problem,color: Colors.amber,),
-    //                       SizedBox(width: 20,),
-    //                       Text("Login Failed",style: TextStyle(fontSize:25),)
-    //                     ]
-    //                     ),
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //           actions: [
-    //             TextButton(
-    //               child: const Text("OK"),
-    //               onPressed: () {
-    //                 Navigator.of(context).pop();
-    //               },
-    //             ),
-    //           ],
-    //         );
-    //       },
-    //     );
-    //   }
-    // } else {
-    //   // throw Exception('Failed to send data');
-    //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const running_trainfrom()));
-    //   print("false");
-    // }
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const running_trainfrom()));
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      print('Response data: ${responseData['st']}');
+      if(responseData['st']){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const running_trainfrom()));
+      }else{
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              // title: Text("Model version $version"),
+              content: const SizedBox(
+                height: 50,
+                width: 200,
+                child: Column(
+                  children: [
+                    Center(
+                      child: Row(
+                        children: [
+                          Icon(Icons.report_problem,color: Colors.amber,),
+                          SizedBox(width: 20,),
+                          Text("Login Failed",style: TextStyle(fontSize:25),)
+                        ]
+                        ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      // throw Exception('Failed to send data');
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const running_trainfrom()));
+      print("false");
+    }
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const running_trainfrom()));
   }
 
 

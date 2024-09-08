@@ -51,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // get limit image zone
+
   @override
   Widget build(BuildContext context) {
     List list_comport = [];
@@ -164,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Image.asset("images/logo.jpg",
                   width: 30, height: 30, fit: BoxFit.fill),
               const Text(
-                "Plama detection",
+                "Plasma detection",
                 style: TextStyle(
                     color: Color.fromARGB(255, 151, 88, 253),
                     fontFamily: 'Poppins',
@@ -2548,66 +2550,24 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
           child: SfCartesianChart(
               primaryXAxis: const CategoryAxis(),
               primaryYAxis:
-                  const NumericAxis(minimum: 0, maximum: 100, interval: 25),
+                  NumericAxis(minimum: 0, maximum: widget.graph_high_golbal, interval: 25),
               series: <CartesianSeries<ChartData, String>>[
                 LineSeries<ChartData, String>(
-                  dataSource: [
-                    // Bind data source
-                    ChartData('01', 35),
-                    ChartData('02', 28),
-                    ChartData('03', 34),
-                    ChartData('04', 32),
-                    ChartData('05', 40),
-                    ChartData('06', 35),
-                    ChartData('07', 28),
-                    ChartData('08', 34),
-                    ChartData('09', 32),
-                    ChartData('10', 40),
-                    ChartData('11', 32),
-                    ChartData('12', 40),
-                  ],
+                  dataSource: widget.dataSource_his_true,
                   xValueMapper: (ChartData data, _) => data.x,
                   yValueMapper: (ChartData data, _) => data.y,
                   name: 'Series 1',
                   color: const Color(0xFF5A6ACF),
                 ),
                 LineSeries<ChartData, String>(
-                  dataSource: [
-                    // Bind data source
-                    ChartData('01', 35),
-                    ChartData('02', 28),
-                    ChartData('03', 34),
-                    ChartData('04', 32),
-                    ChartData('05', 40),
-                    ChartData('06', 35),
-                    ChartData('07', 28),
-                    ChartData('08', 34),
-                    ChartData('09', 32),
-                    ChartData('10', 40),
-                    ChartData('11', 32),
-                    ChartData('12', 40),
-                  ],
+                  dataSource: widget.dataSource_his,
                   xValueMapper: (ChartData data, _) => data.x,
                   yValueMapper: (ChartData data, _) => data.y,
                   name: 'Series 2',
                   color: const Color.fromARGB(0, 22, 243, 29),
                 ),
                 LineSeries<ChartData, String>(
-                  dataSource: [
-                    // Bind data source
-                    ChartData('01', 5),
-                    ChartData('02', 56),
-                    ChartData('03', 70),
-                    ChartData('04', 88),
-                    ChartData('05', 75),
-                    ChartData('06', 5),
-                    ChartData('07', 28),
-                    ChartData('08', 34),
-                    ChartData('09', 8),
-                    ChartData('10', 89),
-                    ChartData('11', 56),
-                    ChartData('12', 69),
-                  ],
+                  dataSource: widget.dataSource_his,
                   xValueMapper: (ChartData data, _) => data.x,
                   yValueMapper: (ChartData data, _) => data.y,
                   name: 'Series 1',
@@ -2633,9 +2593,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       );
     }
   }
-
   List<Model> models_from_server = GlobalData_model_for_web().getData();
-
   void apply_show_version_model(String chooseModelVersion) {
     for (var run_version in models_from_server) {
       if (chooseModelVersion == run_version.version) {
