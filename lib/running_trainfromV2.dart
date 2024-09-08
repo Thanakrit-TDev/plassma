@@ -27,15 +27,17 @@ class running_trainfrom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  MyHomePage({super.key});
 
+  bool st_notification = true;
+  int limit_bad_setting = 100;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -52,6 +54,94 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // get limit image zone
+  final textLimit_setting = TextEditingController();
+  void save_setting_limit_image()async{
+    widget.limit_bad_setting;
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:3500/setting_limit_bad_image'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'tube_mm_str': textLimit_setting.text,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+    }
+  }
+  void show_image_limit_set(){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("setting (${widget.limit_bad_setting})"),
+            content: SizedBox(
+              height: 300,
+              width: 300,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 400,
+                    child: TextField(
+                        controller: textLimit_setting,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Limit image',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text("Save"),
+                onPressed: () {
+                  save_setting_limit_image();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  void use_now_setting() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:3500/get_limit_bad_image'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      widget.st_notification = responseData['limit_bad_image']['st'];
+      widget.limit_bad_setting = responseData['limit_bad_image']['setlimit_image'];
+      print(widget.st_notification);
+    }
+    setState(() {
+      
+    });
+  }
+  bool _updating = false;
+  @override
+  void initState() {
+      super.initState();
+      Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
+        if (!_updating) {
+          use_now_setting();
+        }
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
       return true;
-    }
-
-    ;
+    };
 
     Future<void> use_comport_and_connect(String comport) async {
       final response = await http.post(
@@ -154,9 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       );
-    }
-
-    ;
+    };
 
     return Scaffold(
       appBar: AppBar(
@@ -220,20 +306,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: const Icon(Icons.run_circle),
                     // icon: Image.asset("images/arrows.png")
                   ),
-                  // SideMenuItemDataTile(
-                  //   highlightSelectedColor:
-                  //       const Color.fromARGB(255, 255, 255, 255),
-                  //   hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                  //   isSelected: false,
-                  //   onTap: () {
-                  //     setState(() {
-                  //       _selectedOption = Options.option7;
-                  //     });
-                  //   },
-                  //   title: '   Ai process',
-                  //   icon: const Icon(Icons.precision_manufacturing_rounded),
-                  //   // icon: Image.asset("images/arrows.png")
-                  // ),
                   SideMenuItemDataTile(
                     highlightSelectedColor: Colors.white,
                     hoverColor: const Color.fromARGB(255, 156, 156, 156),
@@ -305,6 +377,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     title: '   Logout',
                     icon: const Icon(Icons.exit_to_app),
+                  ),
+                  widget.st_notification?SideMenuItemDataTile(
+                    highlightSelectedColor:
+                        const Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                    isSelected: false,
+                    onTap: () {
+                      show_image_limit_set();
+                    },
+                    title: '   Bad image is over limit',
+                    icon: const Icon(Icons.notification_important_sharp,color: Colors.red,),
+                  ):SideMenuItemDataTile(
+                    highlightSelectedColor:
+                        const Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                    isSelected: false,
+                    onTap: () {
+                      show_image_limit_set();
+                    },
+                    title: '   Bad image not more than',
+                    icon: const Icon(Icons.notifications_active,color: Colors.green,),
                   ),
                 ],
                 // footer: const Text('Footer'),
