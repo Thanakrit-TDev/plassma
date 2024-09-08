@@ -89,28 +89,127 @@
 # db.close()
 
 
-import pandas as pd
+# import pandas as pd
 
-# สร้างข้อมูลตัวอย่าง
-data = {
-    'date': pd.date_range(start='2024-01-01', periods=365, freq='D'),
-    'value': range(365)
-}
-# print(data['value'])
+# # สร้างข้อมูลตัวอย่าง
+# data = {
+#     'date': pd.date_range(start='2024-01-01', periods=365, freq='D'),
+#     'value': range(365)
+# }
+# # print(data['value'])
 
-df = pd.DataFrame(data)
+# df = pd.DataFrame(data)
 
-# ตั้งค่า 'date' ให้เป็น index
-df.set_index('date', inplace=True)
+# # ตั้งค่า 'date' ให้เป็น index
+# df.set_index('date', inplace=True)
 
-# แปลงข้อมูลเป็นรายสัปดาห์ (จะสรุปรวมในแต่ละสัปดาห์)
-weekly_df = df.resample('W').sum()
+# # แปลงข้อมูลเป็นรายสัปดาห์ (จะสรุปรวมในแต่ละสัปดาห์)
+# weekly_df = df.resample('W').sum()
 
-# แปลงข้อมูลเป็นรายปี (จะสรุปรวมในแต่ละปี)
-yearly_df = df.resample('Y').sum()
+# # แปลงข้อมูลเป็นรายปี (จะสรุปรวมในแต่ละปี)
+# yearly_df = df.resample('Y').sum()
 
-print("รายสัปดาห์:")
-print(weekly_df.head())
+# print("รายสัปดาห์:")
+# print(weekly_df.head())
 
-print("\nรายปี:")
-print(yearly_df.head())
+# print("\nรายปี:")
+# print(yearly_df.head())
+
+# from datetime import datetime
+# import mysql.connector
+# from mysql.connector import Error
+
+# db = mysql.connector.connect(
+#     host="210.246.215.145",
+#     user="root",
+#     password="OKOEUdI1886*",
+#     database="plasma"
+# )
+# cursor = db.cursor()
+# rr = {}
+
+# rr[str(datetime.now().timestamp())] = {"Tube": "True", "Datetime": datetime.fromtimestamp(datetime.now().timestamp())}
+
+# for key, value in rr.items():
+#     timestamp_value = datetime.datetime.fromtimestamp(int(key)).strftime('%Y-%m-%d %H:%M:%S')
+#     print(f"Converted Timestamp: {timestamp_value}")
+    
+#     data = value.get("Tube")
+#     datetime_value = value.get("Datetime")
+
+#     if data is None or datetime_value is None:
+#         print(f"Missing data in value: {value}")
+#         continue  # Skip this iteration if data is missing
+    
+#     try:
+#         cursor.execute("""
+#         INSERT INTO log (timestamp, data, datetime)
+#         VALUES (%s, %s, %s)
+#         """, (timestamp_value, data, datetime_value))
+#     except Exception as e:
+#         print(f"Failed to insert data: {e}")
+#         db.rollback()  # Rollback if there's an error
+#         continue
+
+# try:
+#     db.commit()
+#     print("Database commit successful")
+# except Exception as e:
+#     print(f"Commit failed: {e}")
+
+# try:
+#     cursor.close()
+#     db.close()
+#     print("Database connection closed")
+# except Exception as e:
+#     print(f"Failed to close the database: {e}")
+
+from datetime import datetime
+import mysql.connector
+from mysql.connector import Error
+
+db = mysql.connector.connect(
+    host="210.246.215.145",
+    user="root",
+    password="OKOEUdI1886*",
+    database="plasma"
+)
+cursor = db.cursor()
+rr = {}
+
+rr[str(datetime.now().timestamp())] = {"Tube": "True", "Datetime": datetime.fromtimestamp(datetime.now().timestamp())}
+
+for key, value in rr.items():
+    # Convert the string timestamp back to datetime
+    timestamp_value = datetime.fromtimestamp(int(float(key))).strftime('%Y-%m-%d %H:%M:%S')
+    print(f"Converted Timestamp: {timestamp_value}")
+    
+    data = value.get("Tube")
+    datetime_value = value.get("Datetime")
+
+    if data is None or datetime_value is None:
+        print(f"Missing data in value: {value}")
+        continue  # Skip this iteration if data is missing
+    
+    try:
+        cursor.execute("""
+        INSERT INTO log (timestamp, data, datetime)
+        VALUES (%s, %s, %s)
+        """, (timestamp_value, data, datetime_value))
+    except Exception as e:
+        print(f"Failed to insert data: {e}")
+        db.rollback()  # Rollback if there's an error
+        continue
+
+try:
+    db.commit()
+    print("Database commit successful")
+except Exception as e:
+    print(f"Commit failed: {e}")
+
+try:
+    cursor.close()
+    db.close()
+    print("Database connection closed")
+except Exception as e:
+    print(f"Failed to close the database: {e}")

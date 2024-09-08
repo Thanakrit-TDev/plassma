@@ -37,7 +37,9 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
 
   bool st_notification = true;
-  int limit_bad_setting = 100;
+  ValueNotifier<int> limit_bad_setting = ValueNotifier<int>(100);
+  ValueNotifier<int> image_good_now = ValueNotifier<int>(0);
+  ValueNotifier<int> image_bad_now = ValueNotifier<int>(0);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -52,6 +54,42 @@ class _MyHomePageState extends State<MyHomePage> {
       _showFirstWidget = !_showFirstWidget;
     });
   }
+  // upload image to pool
+  Future<void> upload_dataset_to_pool()async{
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:3500/upload_All_to_pool'), // Replace with your backend URL
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      // camera_list_all = responseData['data'];
+    }
+  }
+  void runPopup_upload_image_to_pool() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text('Upload to server'),
+              LoadingAnimationWidget.dotsTriangle(
+                color: const Color.fromARGB(255, 106, 55, 248),
+                size: 150,
+              ),
+              const SizedBox(height: 20),
+              const Text('Please wait...'),
+            ],
+          ),
+        );
+      },
+    );
+    await upload_dataset_to_pool();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+  //--------------------------
 
   // get limit image zone
   final textLimit_setting = TextEditingController();
@@ -76,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("setting (${widget.limit_bad_setting})"),
+            title: Text("setting (${widget.limit_bad_setting.value})"),
             content: SizedBox(
               height: 300,
               width: 300,
@@ -107,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text("Save"),
                 onPressed: () {
                   save_setting_limit_image();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -124,18 +163,18 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      widget.st_notification = responseData['limit_bad_image']['st'];
-      widget.limit_bad_setting = responseData['limit_bad_image']['setlimit_image'];
-      print(widget.st_notification);
+        widget.st_notification = responseData['limit_bad_image']['st'];
+        widget.limit_bad_setting = ValueNotifier<int>(responseData['limit_bad_image']['setlimit_image']);
+        widget.image_bad_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_bad']);
+        widget.image_good_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_good']);
+        // print(widget.st_notification);
     }
-    setState(() {
-      
-    });
   }
   bool _updating = false;
   @override
   void initState() {
       super.initState();
+      use_now_setting();
       Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
         if (!_updating) {
           use_now_setting();
@@ -267,6 +306,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: <Widget>[
             SideMenu(
+              hasResizerToggle:false,
+              hasResizer:false,
               backgroundColor: const Color.fromARGB(255, 231, 231, 231),
               builder: (data) => SideMenuData(
                 header: const Column(
@@ -365,6 +406,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: const Icon(Icons.construction_outlined),
                   ),
                   SideMenuItemDataTile(
+                    highlightSelectedColor:
+                        const Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                    isSelected: false,
+                    onTap: () {
+                      show_image_limit_set();
+                    },
+                    title: '   Setting limit image',
+                    icon: const Icon(Icons.image_outlined,color: Colors.black,),
+                  ),
+                  SideMenuItemDataTile(
+                    highlightSelectedColor:
+                        const Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                    isSelected: false,
+                    onTap: () {
+                      runPopup_upload_image_to_pool();
+                    },
+                    title: '   Upload',
+                    icon: const Icon(Icons.upload_file_sharp,color: Colors.black,),
+                  ),
+                  SideMenuItemDataTile(
                     highlightSelectedColor: Colors.white,
                     hoverColor: const Color.fromARGB(255, 156, 156, 156),
                     isSelected: false,
@@ -378,29 +441,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: '   Logout',
                     icon: const Icon(Icons.exit_to_app),
                   ),
-                  widget.st_notification?SideMenuItemDataTile(
-                    highlightSelectedColor:
-                        const Color.fromARGB(255, 255, 255, 255),
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      show_image_limit_set();
-                    },
-                    title: '   Bad image is over limit',
-                    icon: const Icon(Icons.notification_important_sharp,color: Colors.red,),
-                  ):SideMenuItemDataTile(
-                    highlightSelectedColor:
-                        const Color.fromARGB(255, 255, 255, 255),
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      show_image_limit_set();
-                    },
-                    title: '   Bad image not more than',
-                    icon: const Icon(Icons.notifications_active,color: Colors.green,),
-                  ),
                 ],
-                // footer: const Text('Footer'),
+                footer: ai_process()
               ),
             ),
             Expanded(
@@ -4718,215 +4760,126 @@ Widget render_log_load(List<dynamic> data) {
   );
 }
 
-// class ai_process extends StatefulWidget {
-//   ai_process({super.key});
-//   @override
-//   State<ai_process> createState() => _ai_process();
+class ai_process extends StatefulWidget {
+  ai_process({super.key});
 
-//   // keep datasetting
-//   List<bool> setting_list = [true, true, true];
-//   // load setting
-//   bool st_run_frast = true;
-// }
+  bool st_notification = true;
+  ValueNotifier<int> limit_bad_setting = ValueNotifier<int>(100);
+  ValueNotifier<int> image_good_now = ValueNotifier<int>(0);
+  ValueNotifier<int> image_bad_now = ValueNotifier<int>(0);
 
-// class _ai_process extends State<ai_process> {
-//   @override
-//   Future<void> loadsetting_ai() async {
-//     final response = await http.get(
-//       Uri.parse(
-//           'http://127.0.0.1:3500/get_setting_ai'), // Replace with your backend URL
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//       },
-//     );
-//     if (response.statusCode == 200) {
-//       final Map<String, dynamic> responseData = jsonDecode(response.body);
-//       widget.setting_list[0] = responseData['setting'][0];
-//       widget.setting_list[1] = responseData['setting'][1];
-//       widget.setting_list[2] = responseData['setting'][2];
-//     }
-//   }
+  @override
+  State<ai_process> createState() => _ai_process();
+}
 
-//   Future<void> dumpsetting_ai() async {
-//     final response = await http.post(
-//       Uri.parse(
-//           'http://127.0.0.1:3500/dumpsetting_ai'), // Replace with your backend URL
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//       },
-//       body: jsonEncode(<String, List>{
-//         'setting': widget.setting_list,
-//       }),
-//     );
-//   }
-
-//   void save_setting_ai() {
-//     print("settingggguglhlggg");
-//     dumpsetting_ai();
-//   }
-
-//   void initState() {
-//     print("kuy");
-//     setState(() {
-//       loadsetting_ai();
-//     });
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     int windowsHight = ((MediaQuery.of(context).size).height).toInt();
-//     return Transform.scale(
-//       alignment: Alignment.topLeft,
-//       scale: (windowsHight / 1000),
-//       child: Column(children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//           children: [
-//             Container(
-//               width: 400,
-//               // color: Color.fromARGB(255, 165, 165, 165),
-//               child: Column(
-//                 children: [
-//                   Text(
-//                     "setting AI mode",
-//                     style: TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-//                   ),
-//                   Container(
-//                     height: 400,
-//                     width: 400,
-//                     child: Column(
-//                       children: [
-//                         Container(
-//                           height: 50,
-//                           child: Row(
-//                             children: [
-//                               Container(
-//                                 width: 300,
-//                                 child: Row(
-//                                   children: [
-//                                     SizedBox(
-//                                       width: 50,
-//                                     ),
-//                                     Text("Run AI"),
-//                                   ],
-//                                 ),
-//                               ),
-//                               Container(
-//                                 width: 100,
-//                                 child: Switch(
-//                                   value: widget.setting_list[0],
-//                                   onChanged: (bool newValue) {
-//                                     setState(() {
-//                                       widget.setting_list[0] =
-//                                           newValue; // Update the value of the switch
-//                                       save_setting_ai();
-//                                     });
-//                                   },
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         Container(
-//                           height: 50,
-//                           child: Row(
-//                             children: [
-//                               Container(
-//                                 width: 300,
-//                                 child: Row(
-//                                   children: [
-//                                     SizedBox(
-//                                       width: 50,
-//                                     ),
-//                                     Text("Save image prediction"),
-//                                   ],
-//                                 ),
-//                               ),
-//                               Container(
-//                                 width: 100,
-//                                 child: Switch(
-//                                   value: widget.setting_list[1],
-//                                   onChanged: (bool newValue) {
-//                                     setState(() {
-//                                       widget.setting_list[1] =
-//                                           newValue; // Update the value of the switch
-//                                       save_setting_ai();
-//                                     });
-//                                   },
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         Container(
-//                           height: 50,
-//                           child: Row(
-//                             children: [
-//                               Container(
-//                                 width: 300,
-//                                 child: Row(
-//                                   children: [
-//                                     SizedBox(
-//                                       width: 50,
-//                                     ),
-//                                     Text("Auto upload"),
-//                                   ],
-//                                 ),
-//                               ),
-//                               Container(
-//                                 width: 100,
-//                                 child: Switch(
-//                                   value: widget.setting_list[2],
-//                                   onChanged: (bool newValue) {
-//                                     setState(() {
-//                                       widget.setting_list[2] =
-//                                           newValue; // Update the value of the switch
-//                                       save_setting_ai();
-//                                     });
-//                                   },
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//             Container(
-//               width: 400,
-//               // color: Color.fromARGB(255, 165, 165, 165),
-//               child: Column(
-//                 children: [
-//                   Text("Input Image",
-//                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins')),
-//                   Container(
-//                     color: Colors.amberAccent,
-//                     height: 400,
-//                   )
-//                 ],
-//               ),
-//             ),
-//             Container(
-//               width: 400,
-//               // color: Color.fromARGB(255, 165, 165, 165),
-//               child: Column(
-//                 children: [
-//                   Text("Output Data",
-//                       style: TextStyle(fontSize: 20, fontFamily: 'Poppins')),
-//                   Container(
-//                     color: Colors.amberAccent,
-//                     height: 400,
-//                   )
-//                 ],
-//               ),
-//             )
-//           ],
-//         )
-//       ]),
-//     );
-//   }
-// }
+class _ai_process extends State<ai_process> {
+  final textLimit_setting = TextEditingController();
+  void save_setting_limit_image()async{
+    widget.limit_bad_setting;
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:3500/setting_limit_bad_image'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'tube_mm_str': textLimit_setting.text,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+    }
+  }
+  void show_image_limit_set(){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("setting (${widget.limit_bad_setting.value})"),
+            content: SizedBox(
+              height: 300,
+              width: 300,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 400,
+                    child: TextField(
+                        controller: textLimit_setting,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Limit image',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text("Save"),
+                onPressed: () {
+                  save_setting_limit_image();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  void use_now_setting() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:3500/get_limit_bad_image'), // Replace with your backend URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+        widget.st_notification = responseData['limit_bad_image']['st'];
+        widget.limit_bad_setting = ValueNotifier<int>(responseData['limit_bad_image']['setlimit_image']);
+        widget.image_bad_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_bad']);
+        widget.image_good_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_good']);
+        print(widget.st_notification);
+    }
+    setState(() {});
+  }
+  bool _updating = false;
+  @override
+  void initState() {
+      super.initState();
+      Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
+        if (!_updating) {
+          use_now_setting();
+        }
+      });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(children: [
+        SizedBox(width:20),
+        widget.st_notification?Icon(Icons.notification_important_sharp,color: Colors.red,):Icon(Icons.notifications_active,color: Colors.green,),
+        widget.st_notification?Text('   Bad image is over limit'):Text('   Bad image not more than'),
+      ],),
+      Row(children: [
+        SizedBox(width:20),
+        Icon(Icons.collections_rounded,color: Colors.green,),
+        Text('   Good(${widget.image_good_now.value})'),
+      ],),
+      Row(children: [
+        SizedBox(width:20),
+        Icon(Icons.collections_rounded,color: Colors.red,),
+        Text('   Bad(${widget.image_bad_now.value})'),
+      ],),
+    ]);
+  }
+}
