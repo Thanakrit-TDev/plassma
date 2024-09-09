@@ -2,6 +2,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,6 +23,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 // void main() => runApp(MyApp());
+// List<double> _currentSliderSecondaryValue = [
+//   20,
+//   30,
+//   100,
+//   255,
+//   100,
+//   255,
+//   50,
+//   0,
+//   1,
+//   50
+// ];
 class running_trainfrom extends StatelessWidget {
   const running_trainfrom({super.key});
 
@@ -170,6 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
         // print(widget.st_notification);
     }
   }
+
+  // void get_data_mask_json sync(){
+  //   _currentSliderSecondaryValue
+  // }
+
   bool _updating = false;
   @override
   void initState() {
@@ -1497,9 +1515,9 @@ class _Running_WidgetState extends State<Running_Widget> {
     // print("windows_hight $windowsHight");
 
     //swich command and mask
-    // void Changed_mask_and_command() {
-    //   widget.st_mask_and_command = !widget.st_mask_and_command;
-    // }
+    void Changed_mask_and_command() {
+      widget.st_mask_and_command = !widget.st_mask_and_command;
+    }
 
     return Transform.scale(
       alignment: Alignment.topLeft,
@@ -1620,6 +1638,9 @@ class _Running_WidgetState extends State<Running_Widget> {
                                 const SizedBox(
                                   width: 10,
                                 ),
+                                ElevatedButton(
+                                    onPressed: Changed_mask_and_command,
+                                    child: const Text("mask")),
                               ],
                             ),
                           ),
@@ -2758,6 +2779,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
       data_load_log = responseData;
+      // print(data_load_log);
       int count = 0;
       for (var i in data_load_log) {
         if (i[1] == "True") {
@@ -2767,16 +2789,11 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
         }
         count++;
       }
-      // setState(() {
-      //   print(data_load_log);
-      // });
       if (mounted) {
-        // Check if the widget is still mounted
         setState(() {
-          // print(data_load_log);
         });
       }
-      // print(responseData);
+      // print(data_load_log);
     }
   }
 
@@ -3301,7 +3318,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                       width: 400,
                       height: 450,
                       color: Color.fromARGB(255, 255, 255, 255),
-                      // child: render_log_load(data_load_log),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -3320,139 +3336,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                               child: render_log_load(data_load_log),
                             )
                           ]),
-                      // child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-
-                      // children: [
-
-                      // const Text(
-                      //   "Notification",
-                      //   style:
-                      //       TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                      // ),
-                      // const Text(
-                      //   "3",
-                      //   style:
-                      //       TextStyle(fontSize: 15, fontFamily: 'Poppins'),
-                      // ),
-                      // Container(
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       const Row(
-                      //         children: [
-                      //           Icon(
-                      //             Icons.arrow_downward,
-                      //             size: 15,
-                      //             color: Colors.red,
-                      //           ),
-                      //           Text(
-                      //             "2.1%",
-                      //             style: TextStyle(
-                      //                 fontSize: 15,
-                      //                 fontFamily: 'Poppins',
-                      //                 color: Colors.red,
-                      //                 fontWeight: FontWeight.w700),
-                      //           ),
-                      //           Text(
-                      //             " vs last week",
-                      //             style: TextStyle(
-                      //                 fontSize: 15,
-                      //                 fontFamily: 'Poppins',
-                      //                 color: Color.fromARGB(255, 0, 0, 0),
-                      //                 fontWeight: FontWeight.w100),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       ElevatedButton(
-                      //           onPressed: () {},
-                      //           child: const Text("View Report")),
-                      //     ],
-                      //   ),
-                      // ),
-                      // const Text(
-                      //   "Detect from 1-6 Jan, 2024",
-                      //   style: TextStyle(
-                      //       fontSize: 15,
-                      //       fontFamily: 'Poppins',
-                      //       color: Color.fromARGB(255, 0, 0, 0),
-                      //       fontWeight: FontWeight.w100),
-                      // ),
-                      // // grap--------------
-                      // SizedBox(
-                      //   height: 250, // cari++++++++
-                      //   child: SfCartesianChart(
-                      //       primaryXAxis: const CategoryAxis(),
-                      //       primaryYAxis: const NumericAxis(
-                      //           minimum: 0, maximum: 100, interval: 25),
-                      //       series: <CartesianSeries<ChartData, String>>[
-                      //         LineSeries<ChartData, String>(
-                      //           dataSource: [
-                      //             // Bind data source
-                      //             ChartData('01', 35),
-                      //             ChartData('02', 28),
-                      //             ChartData('03', 34),
-                      //             ChartData('04', 32),
-                      //             ChartData('05', 40),
-                      //             ChartData('06', 35),
-                      //             ChartData('07', 28),
-                      //             ChartData('08', 34),
-                      //             ChartData('09', 32),
-                      //             ChartData('10', 40),
-                      //             ChartData('11', 32),
-                      //             ChartData('12', 40),
-                      //           ],
-                      //           xValueMapper: (ChartData data, _) => data.x,
-                      //           yValueMapper: (ChartData data, _) => data.y,
-                      //           name: 'Series 1',
-                      //           color: const Color(0xFF5A6ACF),
-                      //         ),
-                      //         LineSeries<ChartData, String>(
-                      //           dataSource: [
-                      //             // Bind data source
-                      //             ChartData('01', 5),
-                      //             ChartData('02', 56),
-                      //             ChartData('03', 70),
-                      //             ChartData('04', 88),
-                      //             ChartData('05', 75),
-                      //             ChartData('06', 5),
-                      //             ChartData('07', 28),
-                      //             ChartData('08', 34),
-                      //             ChartData('09', 8),
-                      //             ChartData('10', 89),
-                      //             ChartData('11', 56),
-                      //             ChartData('12', 69),
-                      //           ],
-                      //           xValueMapper: (ChartData data, _) => data.x,
-                      //           yValueMapper: (ChartData data, _) => data.y,
-                      //           name: 'Series 1',
-                      //           color: const Color(0xFFF2383A),
-                      //         ),
-                      //       ]),
-                      // ),
-                      // Container(
-                      //   child: const Row(
-                      //     children: [
-                      //       Icon(
-                      //         Icons.circle,
-                      //         color: Color(0xFF5A6ACF),
-                      //         size: 20,
-                      //       ),
-                      //       Text(" Today"),
-                      //       SizedBox(
-                      //         width: 50,
-                      //       ),
-                      //       Icon(
-                      //         Icons.circle,
-                      //         color: Color(0xFFF2383A),
-                      //         size: 20,
-                      //       ),
-                      //       Text(" Yesterday"),
-                      //     ],
-                      //   ),
-                      // ),
-                      // ],
-                      // ),
                     ),
                   ],
                 ),
@@ -4596,10 +4479,10 @@ List<double> _currentSliderSecondaryValue = [
   255,
   100,
   255,
-  50,
-  50,
   1,
-  50
+  0,
+  1,
+  1
 ];
 List<String> _nameSlider = [
   "Hue Min",
@@ -4613,9 +4496,9 @@ List<String> _nameSlider = [
   "Saturation",
   "Range"
 ];
-List<double> _max = [179, 179, 255, 255, 255, 255, 100, 100, 10, 1000];
-List<double> _min = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-List<int> _divisions = [179, 179, 255, 255, 255, 255, 100, 100, 10, 1000];
+List<double> _max = [179, 179, 255, 255, 255, 255, 100, 15, 10, 1000];
+List<double> _min = [1, 1, 1, 1, 1, 1, 1, -15, 1, 1];
+List<int> _divisions = [179, 179, 255, 255, 255, 255, 100, 30, 10, 1000];
 
 void mask_setting() async {
   final response = await http.post(
@@ -4637,6 +4520,30 @@ void mask_setting() async {
       "Range": _currentSliderSecondaryValue[9].toInt().toString(),
     }),
   );
+}
+
+void mask_get_setting() async {
+  final response = await http.get(
+    Uri.parse(
+        'http://127.0.0.1:3500/get_setting_mask'), // Replace with your backend URL
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      _currentSliderSecondaryValue[0] = (responseData['h_min']).toDouble();
+      _currentSliderSecondaryValue[1] = (responseData['h_max']).toDouble();
+      _currentSliderSecondaryValue[2] = (responseData['s_min']).toDouble();
+      _currentSliderSecondaryValue[3] = (responseData['s_max']).toDouble();
+      _currentSliderSecondaryValue[4] = (responseData['v_min']).toDouble();
+      _currentSliderSecondaryValue[5] = (responseData['v_max']).toDouble();
+      _currentSliderSecondaryValue[6] = (responseData['brightness']).toDouble();
+      _currentSliderSecondaryValue[7] = (responseData['contrast']).toDouble();
+      _currentSliderSecondaryValue[8] = (responseData['saturation_boost']).toDouble();
+      _currentSliderSecondaryValue[9] = (responseData['range_detect']).toDouble();
+      // print(responseData);
+    }
 }
 
 Widget Setting_mask() {
@@ -4664,6 +4571,9 @@ Widget Setting_mask() {
               onChanged: (double value) {
                 _currentSliderSecondaryValue[index] = value;
                 mask_setting();
+              },
+              onChangeStart: (double value){
+                mask_get_setting();
               },
             ),
           ],
@@ -4709,8 +4619,6 @@ class GlobalData_model_for_web {
   List<Model> myData = [];
   void addData(List<Model> data) {
     myData = data;
-    // myData.add(data);
-    // myData.add(data);
   }
 
   List<Model> getData() {
@@ -4733,11 +4641,11 @@ Widget render_log_load(List<dynamic> data) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Detect status:${data[index][1]}"),
+                  Text("Detect status:${data[index][8]}"),
                   SizedBox(
                     width: 20,
                   ),
-                  data[index][3]
+                  data[index][8]
                       ? Icon(
                           Icons.circle,
                           size: 20,
@@ -4750,6 +4658,8 @@ Widget render_log_load(List<dynamic> data) {
                         )
                 ],
               ),
+              Text("H:${data[index][3]} P:${data[index][4]} V:${data[index][5]} D:${data[index][6]}"),
+              Text("Qr:${data[index][7]}"),
               const SizedBox(
                 width: 30,
               ),
