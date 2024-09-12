@@ -67,8 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
       _showFirstWidget = !_showFirstWidget;
     });
   }
+
   // upload image to pool
-  Future<void> upload_dataset_to_pool()async{
+  Future<void> upload_dataset_to_pool() async {
     final response = await http.get(
       Uri.parse(
           'http://127.0.0.1:3500/upload_All_to_pool'), // Replace with your backend URL
@@ -78,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // camera_list_all = responseData['data'];
     }
   }
+
   void runPopup_upload_image_to_pool() async {
     showDialog(
       context: context,
@@ -106,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // get limit image zone
   final textLimit_setting = TextEditingController();
-  void save_setting_limit_image()async{
+  void save_setting_limit_image() async {
     widget.limit_bad_setting;
     final response = await http.post(
       Uri.parse(
@@ -122,50 +124,52 @@ class _MyHomePageState extends State<MyHomePage> {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
     }
   }
-  void show_image_limit_set(){
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("setting (${widget.limit_bad_setting.value})"),
-            content: SizedBox(
-              height: 300,
-              width: 300,
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 400,
-                    child: TextField(
-                        controller: textLimit_setting,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Limit image',
-                      ),
+
+  void show_image_limit_set() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("setting (${widget.limit_bad_setting.value})"),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: TextField(
+                    controller: textLimit_setting,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Limit image',
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                child: const Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text("Save"),
-                onPressed: () {
-                  save_setting_limit_image();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Save"),
+              onPressed: () {
+                save_setting_limit_image();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void use_now_setting() async {
     final response = await http.get(
       Uri.parse(
@@ -176,11 +180,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-        widget.st_notification = responseData['limit_bad_image']['st'];
-        widget.limit_bad_setting = ValueNotifier<int>(responseData['limit_bad_image']['setlimit_image']);
-        widget.image_bad_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_bad']);
-        widget.image_good_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_good']);
-        // print(widget.st_notification);
+      widget.st_notification = responseData['limit_bad_image']['st'];
+      widget.limit_bad_setting =
+          ValueNotifier<int>(responseData['limit_bad_image']['setlimit_image']);
+      widget.image_bad_now =
+          ValueNotifier<int>(responseData['limit_bad_image']['image_pr_bad']);
+      widget.image_good_now =
+          ValueNotifier<int>(responseData['limit_bad_image']['image_pr_good']);
+      // print(widget.st_notification);
     }
   }
 
@@ -191,13 +198,13 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _updating = false;
   @override
   void initState() {
-      super.initState();
-      use_now_setting();
-      Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
-        if (!_updating) {
-          use_now_setting();
-        }
-      });
+    super.initState();
+    use_now_setting();
+    Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
+      if (!_updating) {
+        use_now_setting();
+      }
+    });
   }
 
   @override
@@ -221,7 +228,9 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
       return true;
-    };
+    }
+
+    ;
 
     Future<void> use_comport_and_connect(String comport) async {
       final response = await http.post(
@@ -299,7 +308,9 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       );
-    };
+    }
+
+    ;
 
     return Scaffold(
       appBar: AppBar(
@@ -324,144 +335,149 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: <Widget>[
             SideMenu(
-              hasResizerToggle:false,
-              hasResizer:false,
+              hasResizerToggle: false,
+              hasResizer: false,
               backgroundColor: const Color.fromARGB(255, 231, 231, 231),
               builder: (data) => SideMenuData(
-                header: const Column(
-                  children: [
-                    SizedBox(
-                      height: (30),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        // color: Color.fromARGB(255, 255, 37, 37),
-                        // width: 100,
-                        height: 30,
-                        child: Center(
-                          child: Text(
-                            "  Menu",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                  header: const Column(
+                    children: [
+                      SizedBox(
+                        height: (30),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          // color: Color.fromARGB(255, 255, 37, 37),
+                          // width: 100,
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              "  Menu",
+                              style: TextStyle(
+                                  fontSize: 18, fontFamily: 'Poppins'),
+                            ),
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  items: [
+                    SideMenuItemDataTile(
+                      highlightSelectedColor:
+                          const Color.fromARGB(255, 255, 255, 255),
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        setState(() {
+                          _selectedOption = Options.option1;
+                        });
+                      },
+                      title: '   Running',
+                      icon: const Icon(Icons.run_circle),
+                      // icon: Image.asset("images/arrows.png")
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor: Colors.white,
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        setState(() {
+                          _selectedOption = Options.option2;
+                        });
+                      },
+                      title: '   Dashboard',
+                      icon: const Icon(Icons.home),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor: Colors.white,
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        setState(() {
+                          _selectedOption = Options.option3;
+                        });
+                      },
+                      title: '   Train',
+                      icon: const Icon(Icons.settings),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor: Colors.white,
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        setState(() {
+                          _selectedOption = Options.option4;
+                        });
+                      },
+                      title: '   Data Center',
+                      icon: const Icon(Icons.dataset),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor: Colors.white,
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        setState(() {
+                          _selectedOption = Options.option5;
+                        });
+                      },
+                      title: '   Data Center for train',
+                      icon: const Icon(Icons.dataset),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor: Colors.white,
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        show_list_comport();
+                      },
+                      title: '   List comport',
+                      icon: const Icon(Icons.construction_outlined),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor:
+                          const Color.fromARGB(255, 255, 255, 255),
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        show_image_limit_set();
+                      },
+                      title: '   Setting limit image',
+                      icon: const Icon(
+                        Icons.image_outlined,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor:
+                          const Color.fromARGB(255, 255, 255, 255),
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        runPopup_upload_image_to_pool();
+                      },
+                      title: '   Upload',
+                      icon: const Icon(
+                        Icons.upload_file_sharp,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SideMenuItemDataTile(
+                      highlightSelectedColor: Colors.white,
+                      hoverColor: const Color.fromARGB(255, 156, 156, 156),
+                      isSelected: false,
+                      onTap: () {
+                        setState(() {
+                          _selectedOption = Options.option6;
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Login()));
+                        });
+                      },
+                      title: '   Logout',
+                      icon: const Icon(Icons.exit_to_app),
                     ),
                   ],
-                ),
-                items: [
-                  SideMenuItemDataTile(
-                    highlightSelectedColor:
-                        const Color.fromARGB(255, 255, 255, 255),
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option1;
-                      });
-                    },
-                    title: '   Running',
-                    icon: const Icon(Icons.run_circle),
-                    // icon: Image.asset("images/arrows.png")
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor: Colors.white,
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option2;
-                      });
-                    },
-                    title: '   Dashboard',
-                    icon: const Icon(Icons.home),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor: Colors.white,
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option3;
-                      });
-                    },
-                    title: '   Train',
-                    icon: const Icon(Icons.settings),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor: Colors.white,
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option4;
-                      });
-                    },
-                    title: '   Data Center',
-                    icon: const Icon(Icons.dataset),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor: Colors.white,
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option5;
-                      });
-                    },
-                    title: '   Data Center for train',
-                    icon: const Icon(Icons.dataset),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor: Colors.white,
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      show_list_comport();
-                    },
-                    title: '   List comport',
-                    icon: const Icon(Icons.construction_outlined),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor:
-                        const Color.fromARGB(255, 255, 255, 255),
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      show_image_limit_set();
-                    },
-                    title: '   Setting limit image',
-                    icon: const Icon(Icons.image_outlined,color: Colors.black,),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor:
-                        const Color.fromARGB(255, 255, 255, 255),
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      runPopup_upload_image_to_pool();
-                    },
-                    title: '   Upload',
-                    icon: const Icon(Icons.upload_file_sharp,color: Colors.black,),
-                  ),
-                  SideMenuItemDataTile(
-                    highlightSelectedColor: Colors.white,
-                    hoverColor: const Color.fromARGB(255, 156, 156, 156),
-                    isSelected: false,
-                    onTap: () {
-                      setState(() {
-                        _selectedOption = Options.option6;
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const Login()));
-                      });
-                    },
-                    title: '   Logout',
-                    icon: const Icon(Icons.exit_to_app),
-                  ),
-                ],
-                footer: ai_process()
-              ),
+                  footer: ai_process()),
             ),
             Expanded(
               child: Container(
@@ -1113,8 +1129,9 @@ class _Running_WidgetState extends State<Running_Widget> {
   // }
 
   // get image zone ---------------------------------------------------------------------
-  String imageUrl = "http://127.0.0.1:2545/vdo";
-  String imageUrl_mask = "http://127.0.0.1:2545/mask";
+  String imageUrl = "http://127.0.0.1:3501/image_process_detect";
+  String imageUrl_mask =
+      "http://127.0.0.1:3501/image_process_mask"; //"http://127.0.0.1:2545/mask"
   bool _updating = false;
 
   // GlobalData_Version_model().setdata_GlobalVersion(widget.global_version, widget.global_mse, widget.global_performance);
@@ -1123,20 +1140,23 @@ class _Running_WidgetState extends State<Running_Widget> {
 
   @override
   void initState() {
+    // steamming ---------------------
+    //--------------------------------
     use_now_setting();
     camera_setting();
     get_model_from_internet();
     get_list_model_inmycomputer();
     // print("kuy page 1");
     super.initState();
-    Timer.periodic(const Duration(milliseconds: 50), (Timer timer) {
-      if (!_updating) {
-        _updateImage();
-      }
-    });
+    // Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+    //   if (!_updating) {
+    //     _updateImage();
+    //   }
+    // });
     Timer.periodic(const Duration(milliseconds: 1000), (Timer timer) {
       if (!_updating) {
         status_chacking();
+        _updateImage();
       }
     });
   }
@@ -1148,22 +1168,40 @@ class _Running_WidgetState extends State<Running_Widget> {
     });
 
     String newImageUrl =
-        "http://127.0.0.1:2545/vdo?t=${DateTime.now().millisecondsSinceEpoch}";
+        "http://127.0.0.1:3501/image_process_detect?t=${DateTime.now().millisecondsSinceEpoch}"; //?t=${DateTime.now().millisecondsSinceEpoch}
     if (st_on_off_camera) {
-      //chack status get image
       String newImageUrl =
-          "http://127.0.0.1:2545/vdo?t=${DateTime.now().millisecondsSinceEpoch}";
+          "http://127.0.0.1:3501/image_process_detect?t=${DateTime.now().millisecondsSinceEpoch}";
       await precacheImage(NetworkImage(newImageUrl), context);
     }
 
+
     String MaskImageUrl =
-        "http://127.0.0.1:2545/mask?t=${DateTime.now().millisecondsSinceEpoch}";
+        "http://127.0.0.1:3501/image_process_mask?t=${DateTime.now().millisecondsSinceEpoch}"; //?t=${DateTime.now().millisecondsSinceEpoch}
     if (st_on_off_camera) {
-      //chack status get image
       String MaskImageUrl =
-          "http://127.0.0.1:2545/mask?t=${DateTime.now().millisecondsSinceEpoch}";
+          "http://127.0.0.1:3501/image_process_mask?t=${DateTime.now().millisecondsSinceEpoch}";
       await precacheImage(NetworkImage(MaskImageUrl), context);
+
+    // if (st_on_off_camera) {
+    // String newImageUrl = "http://127.0.0.1:2545/vdo?t=${DateTime.now().millisecondsSinceEpoch}";
+    // String MaskImageUrl = "http://127.0.0.1:2545/mask?t=${DateTime.now().millisecondsSinceEpoch}";
+    
+    // await Future.wait([
+    //   precacheImage(NetworkImage(newImageUrl), context),
+    //   precacheImage(NetworkImage(MaskImageUrl), context),
+    // ]);
+
+
     }
+    // String MaskImageUrl =
+    //     "http://127.0.0.1:3501/vdo?t=${DateTime.now().millisecondsSinceEpoch}";
+    // if (st_on_off_camera) {
+    //   //chack status get image
+    //   String MaskImageUrl =
+    //       "http://127.0.0.1:3501/vdo?t=${DateTime.now().millisecondsSinceEpoch}";
+    //   await precacheImage(NetworkImage(MaskImageUrl), context);
+    // }
 
     if (!mounted) return;
     setState(() {
@@ -1180,7 +1218,6 @@ class _Running_WidgetState extends State<Running_Widget> {
 
   @override
   void dispose() {
-    // Cancel the timer or any other ongoing operations if necessary
     super.dispose();
   }
 
@@ -1222,10 +1259,10 @@ class _Running_WidgetState extends State<Running_Widget> {
 
       return Model(
           version: key.toString(),
-          rate: item['rate'].toString(),
+          rate: item['accuracy'].toString(), //rate -> accuracy
           filename: item['filename'].toString(),
-          mse: item['mse'].toString(),
-          performance: item['performance'].toString(),
+          mse: item['loss'].toString(), //mse -> loss
+          performance: item['accuracy'].toString(), // performance -> accuracy
           st_model_incom: stModelInPc);
     }).toList();
 
@@ -1516,6 +1553,7 @@ class _Running_WidgetState extends State<Running_Widget> {
 
     //swich command and mask
     void Changed_mask_and_command() {
+      // mask_get_setting();
       widget.st_mask_and_command = !widget.st_mask_and_command;
     }
 
@@ -1541,7 +1579,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                     Container(
                       width: 400,
                       height: 400,
-                      color: const Color.fromARGB(255, 211, 211, 211),
+                      // color: const Color.fromARGB(255, 211, 211, 211),
                       child: Column(
                         children: [
                           st_on_off_camera
@@ -1566,7 +1604,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "tube H:${status_detect['mode']['hight']} Data:${status_detect['mode']['qrdata']}",
+                      "Data:${status_detect['mode']['qrdata']} Hight:${status_detect['mode']['hight']}mm.",
                       style: const TextStyle(fontSize: 20),
                     ),
                     Container(
@@ -1621,7 +1659,7 @@ class _Running_WidgetState extends State<Running_Widget> {
                               : Setting_mask(),
                           SizedBox(
                             height: 40,
-                            width: 400,
+                            width: 350,
                             // color: Colors.amber,
                             child: Row(
                               children: [
@@ -1639,8 +1677,12 @@ class _Running_WidgetState extends State<Running_Widget> {
                                   width: 10,
                                 ),
                                 ElevatedButton(
-                                    onPressed: Changed_mask_and_command,
+                                    onPressed: _open_maskURL,
                                     child: const Text("mask")),
+                                const SizedBox(width: 10),
+                                // ElevatedButton(
+                                //     onPressed: mask_save_setting,
+                                //     child: const Text("save"))
                               ],
                             ),
                           ),
@@ -2564,7 +2606,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
     return DateFormat('d:M:y').format(date);
   }
 
-  
   void get_history_for_graph() async {
     setState(() {
       widget.st_download_his = false;
@@ -2591,25 +2632,23 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       print(bufData_souse);
       print(bufData);
 
-
       double graph_high_sub = 100;
       setState(() {
         widget.dataSource_his = [];
         bufData.forEach(
           (key, value) {
             widget.dataSource_his.add(ChartData(key, value.toDouble()));
-            if(graph_high_sub < value.toDouble()){
+            if (graph_high_sub < value.toDouble()) {
               graph_high_sub = value.toDouble();
             }
             print("${key}  ${value}");
           },
-          
         );
         widget.dataSource_his_true = [];
         bufData2.forEach(
           (key, value) {
             widget.dataSource_his_true.add(ChartData(key, value.toDouble()));
-            if(graph_high_sub < value.toDouble()){
+            if (graph_high_sub < value.toDouble()) {
               graph_high_sub = value.toDouble();
             }
           },
@@ -2632,7 +2671,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       },
       body: jsonEncode(<String, String>{
         'start': DateTime.now().subtract(Duration(seconds: 604800)).toString(),
-        'end': DateTime.now().toString()
+        'end': DateTime.now().toString(),
+        'mode': "Day"
       }),
     );
     if (response.statusCode == 200) {
@@ -2654,8 +2694,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
           },
         );
       });
-
-      
     }
   }
 
@@ -2674,8 +2712,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
           height: 250, // cari++++++++
           child: SfCartesianChart(
               primaryXAxis: const CategoryAxis(),
-              primaryYAxis:
-                  NumericAxis(minimum: 0, maximum: widget.graph_high_golbal, interval: 25),
+              primaryYAxis: NumericAxis(
+                  minimum: 0, maximum: widget.graph_high_golbal, interval: 25),
               series: <CartesianSeries<ChartData, String>>[
                 ColumnSeries<ChartData, String>(
                   dataSource: widget.dataSource_his_true,
@@ -2705,8 +2743,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
           height: 250,
           child: SfCartesianChart(
               primaryXAxis: const CategoryAxis(),
-              primaryYAxis:
-                  NumericAxis(minimum: 0, maximum: widget.graph_high_golbal, interval: 25),
+              primaryYAxis: NumericAxis(
+                  minimum: 0, maximum: widget.graph_high_golbal, interval: 25),
               series: <CartesianSeries<ChartData, String>>[
                 LineSeries<ChartData, String>(
                   dataSource: widget.dataSource_his_true,
@@ -2749,6 +2787,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
       );
     }
   }
+
   List<Model> models_from_server = GlobalData_model_for_web().getData();
   void apply_show_version_model(String chooseModelVersion) {
     for (var run_version in models_from_server) {
@@ -2790,8 +2829,7 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
         count++;
       }
       if (mounted) {
-        setState(() {
-        });
+        setState(() {});
       }
       // print(data_load_log);
     }
@@ -2808,8 +2846,11 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
         load_status_get_log();
       }
     });
+  }
 
-    // List<String> dataVersion = GlobalData_Version_model.getData();
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -2893,19 +2934,19 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                                 color: Color(0xFF5A6ACF)),
                                           )),
                                       const SizedBox(
-                                        width: 20,
+                                        width: 180,
                                       ),
-                                      ElevatedButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            "View report",
-                                            style: TextStyle(
-                                                color: Color(0xFF5A6ACF)),
-                                          )),
+
+                                      // ElevatedButton(
+                                      //     onPressed: () {},
+                                      //     child: const Text(
+                                      //       "View report",
+                                      //       style: TextStyle(
+                                      //           color: Color(0xFF5A6ACF)),
+                                      //     )),
                                       const SizedBox(
                                         width: 20,
                                       ),
-                                
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           isExpanded: true,
@@ -2971,7 +3012,8 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                                               Icons.arrow_forward_ios_outlined,
                                             ),
                                             iconSize: 14,
-                                            iconEnabledColor: Color.fromARGB(255, 255, 255, 255),
+                                            iconEnabledColor: Color.fromARGB(
+                                                255, 255, 255, 255),
                                             iconDisabledColor: Colors.grey,
                                           ),
                                           dropdownStyleData: DropdownStyleData(
@@ -3006,7 +3048,6 @@ class _Dashboard_Widget extends State<Dashboard_Widget> {
                               ],
                             ),
                           ),
- 
                           swich_graph(),
                           Container(
                             child: Row(
@@ -3676,6 +3717,8 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
     runGetListFromGoodPool();
     runGetListFromBadPool();
   }
+  
+
 
   Widget Goodrender_image() {
     return SizedBox(
@@ -3789,7 +3832,7 @@ class _DataCenter_WidgetState extends State<DataCenter_Widget> {
                         _toggleCheckbox_bad(value, index);
                       },
                     ),
-                    const Text("delet"),
+                    const Text("delete"),
                     // SizedBox(width: 10,),
                     Checkbox(
                       value: widget.list_bool_save_to_bad[index],
@@ -4216,8 +4259,8 @@ class _DataCenter_WidgetState_fortrain_model
           height: 50,
         ),
         widget.display_swich
-            ? Text("Image All : ${widget.list_image_good_pool.length}")
-            : Text("Image All : ${widget.list_image_bad_pool.length}"),
+            ? Text("Images All : ${widget.list_image_good_pool.length}")
+            : Text("Images All : ${widget.list_image_bad_pool.length}"),
         widget.display_swich ? Goodrender_image() : badrender_image(),
       ],
     );
@@ -4231,6 +4274,14 @@ _launchURL() async {
     throw Exception('Could not launch');
   }
 }
+_open_maskURL() async {
+  final Uri url = Uri.parse(
+      'http://127.0.0.1:3501/video_feed_process_on');
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch');
+  }
+}
+
 
 class ChartData {
   ChartData(this.x, this.y);
@@ -4295,7 +4346,7 @@ Widget GUI_version_model(
         ),
       ),
       Positioned(
-        left: 100, // ระบุค่าพิกัด x
+        left: 90, // ระบุค่าพิกัด x
         top: 100, // ระบุค่าพิกัด y
         child: Text(
           globalVersion,
@@ -4331,7 +4382,7 @@ Widget GUI_version_model(
         left: 230, // ระบุค่าพิกัด x
         top: 200, // ระบุค่าพิกัด y
         child: Text(
-          "MSE",
+          "Loss",
           style: TextStyle(
               fontSize: 14,
               color: Color.fromARGB(255, 255, 255, 255),
@@ -4350,10 +4401,10 @@ Widget GUI_version_model(
         ),
       ),
       const Positioned(
-        left: 30, // ระบุค่าพิกัด x
+        left: 45, // ระบุค่าพิกัด x
         top: 280, // ระบุค่าพิกัด y
         child: Text(
-          "Performance",
+          "Accuracy",
           style: TextStyle(
               fontSize: 14,
               color: Color.fromARGB(255, 255, 255, 255),
@@ -4380,7 +4431,7 @@ Widget GUI_version_model_V2(
         ),
       ),
       Positioned(
-        left: 100, // ระบุค่าพิกัด x
+        left: 90, // ระบุค่าพิกัด x
         top: 100, // ระบุค่าพิกัด y
         child: Text(
           globalVersion,
@@ -4416,7 +4467,7 @@ Widget GUI_version_model_V2(
         left: 230, // ระบุค่าพิกัด x
         top: 200, // ระบุค่าพิกัด y
         child: Text(
-          "MSE",
+          "Loss",
           style: TextStyle(
               fontSize: 14,
               color: Color.fromARGB(255, 255, 255, 255),
@@ -4435,10 +4486,10 @@ Widget GUI_version_model_V2(
         ),
       ),
       const Positioned(
-        left: 30, // ระบุค่าพิกัด x
+        left: 45, // ระบุค่าพิกัด x
         top: 280, // ระบุค่าพิกัด y
         child: Text(
-          "Performance",
+          "Accuracy",
           style: TextStyle(
               fontSize: 14,
               color: Color.fromARGB(255, 255, 255, 255),
@@ -4531,22 +4582,34 @@ void mask_get_setting() async {
     },
   );
   if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      _currentSliderSecondaryValue[0] = (responseData['h_min']).toDouble();
-      _currentSliderSecondaryValue[1] = (responseData['h_max']).toDouble();
-      _currentSliderSecondaryValue[2] = (responseData['s_min']).toDouble();
-      _currentSliderSecondaryValue[3] = (responseData['s_max']).toDouble();
-      _currentSliderSecondaryValue[4] = (responseData['v_min']).toDouble();
-      _currentSliderSecondaryValue[5] = (responseData['v_max']).toDouble();
-      _currentSliderSecondaryValue[6] = (responseData['brightness']).toDouble();
-      _currentSliderSecondaryValue[7] = (responseData['contrast']).toDouble();
-      _currentSliderSecondaryValue[8] = (responseData['saturation_boost']).toDouble();
-      _currentSliderSecondaryValue[9] = (responseData['range_detect']).toDouble();
-      // print(responseData);
-    }
+    final Map<String, dynamic> responseData = jsonDecode(response.body);
+    _currentSliderSecondaryValue[0] = (responseData['h_min']).toDouble();
+    _currentSliderSecondaryValue[1] = (responseData['h_max']).toDouble();
+    _currentSliderSecondaryValue[2] = (responseData['s_min']).toDouble();
+    _currentSliderSecondaryValue[3] = (responseData['s_max']).toDouble();
+    _currentSliderSecondaryValue[4] = (responseData['v_min']).toDouble();
+    _currentSliderSecondaryValue[5] = (responseData['v_max']).toDouble();
+    _currentSliderSecondaryValue[6] = (responseData['brightness']).toDouble();
+    _currentSliderSecondaryValue[7] = (responseData['contrast']).toDouble();
+    _currentSliderSecondaryValue[8] =
+        (responseData['saturation_boost']).toDouble();
+    _currentSliderSecondaryValue[9] = (responseData['range_detect']).toDouble();
+    // print(responseData);
+  }
+}
+
+void mask_save_setting() async {
+  final response = await http.get(
+    Uri.parse(
+        'http://127.0.0.1:3500/save_setting_detect_yellow'), // Replace with your backend URL
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
 }
 
 Widget Setting_mask() {
+  // mask_get_setting();
   return Expanded(
     child: ListView.builder(
       itemCount: 10,
@@ -4572,9 +4635,9 @@ Widget Setting_mask() {
                 _currentSliderSecondaryValue[index] = value;
                 mask_setting();
               },
-              onChangeStart: (double value){
-                mask_get_setting();
-              },
+              // onChangeStart: (double value){
+              //   mask_get_setting();
+              // },
             ),
           ],
         );
@@ -4658,7 +4721,8 @@ Widget render_log_load(List<dynamic> data) {
                         )
                 ],
               ),
-              Text("H:${data[index][3]} P:${data[index][4]} V:${data[index][5]} D:${data[index][6]}"),
+              Text(
+                  "H:${data[index][3]} P:${data[index][4]} V:${data[index][5]} D:${data[index][6]}"),
               Text("Qr:${data[index][7]}"),
               const SizedBox(
                 width: 30,
@@ -4684,7 +4748,7 @@ class ai_process extends StatefulWidget {
 
 class _ai_process extends State<ai_process> {
   final textLimit_setting = TextEditingController();
-  void save_setting_limit_image()async{
+  void save_setting_limit_image() async {
     widget.limit_bad_setting;
     final response = await http.post(
       Uri.parse(
@@ -4700,50 +4764,52 @@ class _ai_process extends State<ai_process> {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
     }
   }
-  void show_image_limit_set(){
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("setting (${widget.limit_bad_setting.value})"),
-            content: SizedBox(
-              height: 300,
-              width: 300,
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 400,
-                    child: TextField(
-                        controller: textLimit_setting,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Limit image',
-                      ),
+
+  void show_image_limit_set() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("setting (${widget.limit_bad_setting.value})"),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: TextField(
+                    controller: textLimit_setting,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Limit image',
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                child: const Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text("Save"),
-                onPressed: () {
-                  save_setting_limit_image();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Save"),
+              onPressed: () {
+                save_setting_limit_image();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void use_now_setting() async {
     final response = await http.get(
       Uri.parse(
@@ -4754,42 +4820,69 @@ class _ai_process extends State<ai_process> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-        widget.st_notification = responseData['limit_bad_image']['st'];
-        widget.limit_bad_setting = ValueNotifier<int>(responseData['limit_bad_image']['setlimit_image']);
-        widget.image_bad_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_bad']);
-        widget.image_good_now = ValueNotifier<int>(responseData['limit_bad_image']['image_pr_good']);
-        print(widget.st_notification);
+      widget.st_notification = responseData['limit_bad_image']['st'];
+      widget.limit_bad_setting =
+          ValueNotifier<int>(responseData['limit_bad_image']['setlimit_image']);
+      widget.image_bad_now =
+          ValueNotifier<int>(responseData['limit_bad_image']['image_pr_bad']);
+      widget.image_good_now =
+          ValueNotifier<int>(responseData['limit_bad_image']['image_pr_good']);
+      print(widget.st_notification);
     }
     setState(() {});
   }
+
   bool _updating = false;
   @override
   void initState() {
-      super.initState();
-      Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
-        if (!_updating) {
-          use_now_setting();
-        }
-      });
+    super.initState();
+    Timer.periodic(const Duration(milliseconds: 5000), (Timer timer) {
+      if (!_updating) {
+        use_now_setting();
+      }
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Row(children: [
-        SizedBox(width:20),
-        widget.st_notification?Icon(Icons.notification_important_sharp,color: Colors.red,):Icon(Icons.notifications_active,color: Colors.green,),
-        widget.st_notification?Text('   Bad image is over limit'):Text('   Bad image not more than'),
-      ],),
-      Row(children: [
-        SizedBox(width:20),
-        Icon(Icons.collections_rounded,color: Colors.green,),
-        Text('   Good(${widget.image_good_now.value})'),
-      ],),
-      Row(children: [
-        SizedBox(width:20),
-        Icon(Icons.collections_rounded,color: Colors.red,),
-        Text('   Bad(${widget.image_bad_now.value})'),
-      ],),
+      Row(
+        children: [
+          SizedBox(width: 20),
+          widget.st_notification
+              ? Icon(
+                  Icons.notification_important_sharp,
+                  color: Colors.red,
+                )
+              : Icon(
+                  Icons.notifications_active,
+                  color: Colors.green,
+                ),
+          widget.st_notification
+              ? Text('   Bad image is over limit')
+              : Text('   Bad image not more than'),
+        ],
+      ),
+      Row(
+        children: [
+          SizedBox(width: 20),
+          Icon(
+            Icons.collections_rounded,
+            color: Colors.green,
+          ),
+          Text('   Good(${widget.image_good_now.value})'),
+        ],
+      ),
+      Row(
+        children: [
+          SizedBox(width: 20),
+          Icon(
+            Icons.collections_rounded,
+            color: Colors.red,
+          ),
+          Text('   Bad(${widget.image_bad_now.value})'),
+        ],
+      ),
     ]);
   }
 }
