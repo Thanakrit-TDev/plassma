@@ -4271,7 +4271,7 @@ _launchURL() async {
   final Uri url = Uri.parse(
       'https://colab.research.google.com/drive/1Yq_w4lpbOx-ALFTP9RZY-fkpBkhsoLQp?usp=sharing');
   if (!await launchUrl(url)) {
-    throw Exception('Could not launch');
+    throw Exception('Could not launch'); //1
   }
 }
 _open_maskURL() async {
